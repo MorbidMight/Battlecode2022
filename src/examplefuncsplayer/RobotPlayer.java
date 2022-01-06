@@ -25,6 +25,7 @@ public strictfp class RobotPlayer {
      */
     static final Random rng = new Random(6147);
 
+
     /** Array containing all the possible movement directions. */
     static final Direction[] directions = {
         Direction.NORTH,
@@ -50,6 +51,14 @@ public strictfp class RobotPlayer {
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
         System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
+
+        int numMiners = 0;
+        boolean isScout = false;
+        //figure out formula to taper off scout production
+        if(rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5)
+        {
+            isScout = true;
+        }
         // You can also use indicators to save debug notes in replays.
         rc.setIndicatorString("Hello world!");
 
@@ -58,7 +67,7 @@ public strictfp class RobotPlayer {
             // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
 
-            turnCount += 1;  // We have now been alive for one more turn!
+            turnCount ++;  // We have now been alive for one more turn!
             System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
@@ -68,7 +77,7 @@ public strictfp class RobotPlayer {
                 // use different strategies on different robots. If you wish, you are free to rewrite
                 // this into a different control structure!
                 switch (rc.getType()) {
-                    case ARCHON:     runArchon(rc);  break;
+                    case ARCHON:     runArchon(rc, numMiners);  break;
                     case MINER:      runMiner(rc);   break;
                     case SOLDIER:    runSoldier(rc); break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
@@ -104,14 +113,16 @@ public strictfp class RobotPlayer {
      * Run a single turn for an Archon.
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
      */
-    static void runArchon(RobotController rc) throws GameActionException {
+    static void runArchon(RobotController rc, int numMiners) throws GameActionException {
         // Pick a direction to build in.
         Direction dir = directions[rng.nextInt(directions.length)];
         if (rng.nextBoolean()) {
             // Let's try to build a miner.
+            System.out.println(numMiners);
             rc.setIndicatorString("Trying to build a miner");
-            if (rc.canBuildRobot(RobotType.MINER, dir)) {
+            if (rc.canBuildRobot(RobotType.MINER, dir) && numMiners <= 100) {
                 rc.buildRobot(RobotType.MINER, dir);
+                numMiners++;
             }
         } else {
             // Let's try to build a soldier.
@@ -128,6 +139,7 @@ public strictfp class RobotPlayer {
      */
     static void runMiner(RobotController rc) throws GameActionException {
         // Try to mine on squares around us.
+
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -142,9 +154,13 @@ public strictfp class RobotPlayer {
                 }
             }
         }
-
+        Direction dir;
+        MapLocation[] k = rc.senseNearbyLocationsWithLead(10);
+        if(k.length == 0)
+            dir = directions[rng.nextInt(directions.length)];
+        else
+            dir = rc.getLocation().directionTo(k[0]);
         // Also try to move randomly.
-        Direction dir = directions[rng.nextInt(directions.length)];
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
@@ -157,6 +173,7 @@ public strictfp class RobotPlayer {
      */
     static void runSoldier(RobotController rc) throws GameActionException {
         // Try to attack someone
+        //add scout implementation
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
