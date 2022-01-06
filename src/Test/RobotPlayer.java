@@ -173,13 +173,22 @@ public strictfp class RobotPlayer {
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
      */
     static void runSoldier(RobotController rc) throws GameActionException {
+        int k = 0;
+        int a = 0;
         // Try to attack someone
         //add scout implementation
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length > 0) {
-            MapLocation toAttack = enemies[0].location;
+        if (enemies.length > 0)
+            for (int i = 0; i < enemies.length; i++){
+                if (enemies[i].getHealth() < k) {
+                    a = i;
+                    k = enemies[i].getHealth();
+                }
+        }
+
+            MapLocation toAttack = enemies[a].location;
             if (rc.canAttack(toAttack)) {
                 rc.attack(toAttack);
             }
