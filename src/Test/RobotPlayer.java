@@ -120,15 +120,16 @@ public strictfp class RobotPlayer {
             // Let's try to build a miner.
             System.out.println(numMiners);
             rc.setIndicatorString("Trying to build a miner");
-            if (rc.canBuildRobot(RobotType.MINER, dir) && numMiners <= 100) {
+            if (rc.canBuildRobot(RobotType.MINER, dir)) {
                 rc.buildRobot(RobotType.MINER, dir);
-                numMiners++;
+
             }
-        } else {
+        } if (rc.readSharedArray(0)) < 15 {
             // Let's try to build a soldier.
             rc.setIndicatorString("Trying to build a soldier");
             if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
                 rc.buildRobot(RobotType.SOLDIER, dir);
+                rc.writeSharedArray(0,rc.readSharedArray(0) + 1);
             }
         }
     }
