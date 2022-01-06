@@ -154,12 +154,7 @@ public strictfp class RobotPlayer {
                 }
             }
         }
-        Direction dir;
-        MapLocation[] k = rc.senseNearbyLocationsWithLead(10);
-        if(k.length == 0)
-            dir = directions[rng.nextInt(directions.length)];
-        else
-            dir = rc.getLocation().directionTo(k[0]);
+        Direction dir = directions[rng.nextInt(directions.length)];
         // Also try to move randomly.
         if (rc.canMove(dir)) {
             rc.move(dir);
