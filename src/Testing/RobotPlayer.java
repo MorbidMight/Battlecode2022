@@ -115,7 +115,25 @@ public strictfp class RobotPlayer {
      */
     static void runArchon(RobotController rc, int numMiners) throws GameActionException {
         // Pick a direction to build in.
+//check for a possible repair
+        Team ally = rc.getTeam();
         Direction dir = directions[rng.nextInt(directions.length)];
+        RobotInfo[] k = rc.senseNearbyRobots(20, ally);
+        //for loop to check which possible heal is lowest on health
+        int q = 100; // holder variable for lowest possible health to heal
+        int w = 0; // holder variable for index of lowest possible heal
+        if(k.length >= 1) {
+            for (int a = 0; a < k.length; a++) {
+                if(k[a].getHealth()< q) {
+                    q = k[a].getHealth();
+                    w = a;
+                }
+            }
+            if(q < 15 && rc.canRepair(k[w].getLocation()))
+                rc.repair(k[w].getLocation());
+        }
+
+
         if (rng.nextBoolean()) {
             // Let's try to build a miner.
             System.out.println(numMiners);
@@ -124,12 +142,12 @@ public strictfp class RobotPlayer {
                 rc.buildRobot(RobotType.MINER, dir);
 
             }
-        } if (rc.readSharedArray(0) < 15) {
+        } else  {
             // Let's try to build a soldier.
             rc.setIndicatorString("Trying to build a soldier");
             if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
                 rc.buildRobot(RobotType.SOLDIER, dir);
-                rc.writeSharedArray(0,rc.readSharedArray(0) + 1);
+
             }
         }
     }
@@ -189,20 +207,38 @@ public strictfp class RobotPlayer {
                 }
         }
 
-            MapLocation toAttack = enemies[a].location;
+            MapLocation toAttack = enemies[a].location; // find who to attack
             if (rc.canAttack(toAttack)) {
                 rc.attack(toAttack);
             }
-
-        Direction dir;
-
-            if (enemies.length > 1)
-                dir = rc.getLocation().directionTo(enemies[0].location);
-            else
+        Direction dir = directions[rng.nextInt(directions.length)];
+            Team ally = rc.getTeam();
+        if (rc.getHealth() < 10) { //low on health, need to run
+            RobotInfo[] allies = rc.senseNearbyRobots(radius, ally);
+            if (allies.length == 0)
                 dir = directions[rng.nextInt(directions.length)];
-        if (rc.canMove(dir)) {
-            rc.move(dir);
-            System.out.println("I moved!");
+            else
+                dir = rc.getLocation().directionTo(allies[0].location);
+            for ( int i = 0; i < allies.length; i ++)
+            {
+                if(allies[i].getType() == RobotType.ARCHON) {
+                    dir = rc.getLocation().directionTo(allies[i].location);
+                    break;
+                }
+            }
+
+            if (rc.canMove(dir)) {
+                rc.move(dir);
+                System.out.println("I moved!");
+            }
+        }
+
+        else{ // attack!
+                dir = rc.getLocation().directionTo(enemies[0].location);
+            if (rc.canMove(dir)) {
+                rc.move(dir);
+                System.out.println("I moved!");
+            }
         }
     }
 }
