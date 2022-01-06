@@ -1,4 +1,4 @@
-package Test;
+package Testinhg;
 
 import battlecode.common.*;
 import java.util.Random;
@@ -181,7 +181,7 @@ public strictfp class RobotPlayer {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length > 0)
+        if (enemies.length > 1)
             for (int i = 0; i < enemies.length; i++){
                 if (enemies[i].getHealth() < k) {
                     a = i;
@@ -196,7 +196,7 @@ public strictfp class RobotPlayer {
 
         Direction dir;
 
-            if (enemies.length > 0)
+            if (enemies.length > 1)
                 dir = rc.getLocation().directionTo(enemies[0].location);
             else
                 dir = directions[rng.nextInt(directions.length)];
