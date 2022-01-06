@@ -157,7 +157,7 @@ public strictfp class RobotPlayer {
         Direction dir;
         MapLocation[] k = rc.senseNearbyLocationsWithLead(10);
 
-
+        // hi urav
         if(k.length == 0)
             dir = directions[rng.nextInt(directions.length)];
         else
