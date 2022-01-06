@@ -1,4 +1,4 @@
-package examplefuncsplayer;
+package Test;
 
 import battlecode.common.*;
 import java.util.Random;
@@ -28,14 +28,14 @@ public strictfp class RobotPlayer {
 
     /** Array containing all the possible movement directions. */
     static final Direction[] directions = {
-        Direction.NORTH,
-        Direction.NORTHEAST,
-        Direction.EAST,
-        Direction.SOUTHEAST,
-        Direction.SOUTH,
-        Direction.SOUTHWEST,
-        Direction.WEST,
-        Direction.NORTHWEST,
+            Direction.NORTH,
+            Direction.NORTHEAST,
+            Direction.EAST,
+            Direction.SOUTHEAST,
+            Direction.SOUTH,
+            Direction.SOUTHWEST,
+            Direction.WEST,
+            Direction.NORTHWEST,
     };
 // test
     /**
@@ -120,15 +120,16 @@ public strictfp class RobotPlayer {
             // Let's try to build a miner.
             System.out.println(numMiners);
             rc.setIndicatorString("Trying to build a miner");
-            if (rc.canBuildRobot(RobotType.MINER, dir) && numMiners <= 100) {
+            if (rc.canBuildRobot(RobotType.MINER, dir)) {
                 rc.buildRobot(RobotType.MINER, dir);
-                numMiners++;
+
             }
-        } else {
+        } if (rc.readSharedArray(0) < 15) {
             // Let's try to build a soldier.
             rc.setIndicatorString("Trying to build a soldier");
             if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
                 rc.buildRobot(RobotType.SOLDIER, dir);
+                rc.writeSharedArray(0,rc.readSharedArray(0) + 1);
             }
         }
     }
@@ -173,20 +174,32 @@ public strictfp class RobotPlayer {
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
      */
     static void runSoldier(RobotController rc) throws GameActionException {
+        int k = 0;
+        int a = 0;
         // Try to attack someone
         //add scout implementation
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length > 0) {
-            MapLocation toAttack = enemies[0].location;
+        if (enemies.length > 0)
+            for (int i = 0; i < enemies.length; i++){
+                if (enemies[i].getHealth() < k) {
+                    a = i;
+                    k = enemies[i].getHealth();
+                }
+        }
+
+            MapLocation toAttack = enemies[a].location;
             if (rc.canAttack(toAttack)) {
                 rc.attack(toAttack);
             }
-        }
 
-        // Also try to move randomly.
-        Direction dir = directions[rng.nextInt(directions.length)];
+        Direction dir;
+
+            if (enemies.length > 0)
+                dir = rc.getLocation().directionTo(enemies[0].location);
+            else
+                dir = directions[rng.nextInt(directions.length)];
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
