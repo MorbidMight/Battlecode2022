@@ -199,21 +199,27 @@ public strictfp class RobotPlayer {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length > 1)
+        Direction dir = directions[rng.nextInt(directions.length)];
+            Team ally = rc.getTeam();
+        if (enemies.length > 1){
             for (int i = 0; i < enemies.length; i++){
                 if (enemies[i].getHealth() < k) {
                     a = i;
                     k = enemies[i].getHealth();
                 }
-        }
+            }
 
             MapLocation toAttack = enemies[a].location; // find who to attack
             if (rc.canAttack(toAttack)) {
                 rc.attack(toAttack);
             }
-        Direction dir = directions[rng.nextInt(directions.length)];
-            Team ally = rc.getTeam();
-        if (rc.getHealth() < 10) { //low on health, need to run
+            if (rc.canMove(dir)) {
+                rc.move(dir);
+                System.out.println("I moved!");
+            }
+        }
+        
+        else if (rc.getHealth() < 10) { //low on health, need to run
             RobotInfo[] allies = rc.senseNearbyRobots(radius, ally);
             if (allies.length == 0)
                 dir = directions[rng.nextInt(directions.length)];
@@ -233,12 +239,11 @@ public strictfp class RobotPlayer {
             }
         }
 
-        else{ // attack!
-                dir = rc.getLocation().directionTo(enemies[0].location);
+        else{ 
             if (rc.canMove(dir)) {
-                rc.move(dir);
-                System.out.println("I moved!");
-            }
+            rc.move(dir);
+            System.out.println("I moved!");
+        }
         }
     }
 }
