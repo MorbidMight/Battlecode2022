@@ -124,7 +124,7 @@ public strictfp class RobotPlayer {
                 rc.buildRobot(RobotType.MINER, dir);
 
             }
-        } if (rc.readSharedArray(0)) < 15 {
+        } if (rc.readSharedArray(0) < 15) {
             // Let's try to build a soldier.
             rc.setIndicatorString("Trying to build a soldier");
             if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
@@ -193,10 +193,13 @@ public strictfp class RobotPlayer {
             if (rc.canAttack(toAttack)) {
                 rc.attack(toAttack);
             }
-        }
 
-        // Also try to move randomly.
-        Direction dir = directions[rng.nextInt(directions.length)];
+        Direction dir;
+
+            if (enemies.length > 0)
+                dir = rc.getLocation().directionTo(enemies[0].location);
+            else
+                dir = directions[rng.nextInt(directions.length)];
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
