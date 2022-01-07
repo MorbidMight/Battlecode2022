@@ -1,11 +1,10 @@
 package myBot;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 public class MinerAI {
+static int turnssincemined = 0;
+static boolean isNearArchon = false;
 
     /**
      * Run a single turn for a Miner.
@@ -14,6 +13,7 @@ public class MinerAI {
     static void runMiner(RobotController rc) throws GameActionException {
         // Try to mine on squares around us.
         //Mining
+        turnssincemined++;
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -22,12 +22,15 @@ public class MinerAI {
                 // You can mine multiple times per turn!
                 while (rc.canMineGold(mineLocation)) {
                     rc.mineGold(mineLocation);
+                    turnssincemined=0;
                 }
                 while (rc.canMineLead(mineLocation) && rc.senseLead(mineLocation) > 1) {
                     rc.mineLead(mineLocation);
+                    turnssincemined=0;
                 }
             }
         }
+
 
 
         //movement
@@ -56,6 +59,20 @@ public class MinerAI {
                 System.out.println("I moved!");
             }
         }
+
+        Team ally = rc.getTeam();
+        RobotInfo[] p = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, ally);
+
+        for(int i = 0; i< p.length; i++){
+            if(p[i].getType() == RobotType.ARCHON){
+                isNearArchon = true;
+                break;
+            }
+        }
+        if(isNearArchon && turnssincemined > 200)
+            rc.disintegrate();
+        isNearArchon = false;
+
     }
 }
 

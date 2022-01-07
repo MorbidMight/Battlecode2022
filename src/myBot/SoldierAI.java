@@ -85,6 +85,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
             if (enemies[i].getHealth() < k) {
                 a = i;
                 k = enemies[i].getHealth();
+
             }
         }
 
@@ -92,10 +93,13 @@ static void runSoldier(RobotController rc) throws GameActionException {
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
-        if (rc.canMove(dir)) {
-            rc.move(dir);
-            System.out.println("I moved!");
+        if(enemies[a].getType() != RobotType.ARCHON){
+            if (rc.canMove(dir)) {
+                rc.move(dir);
+                System.out.println("I moved!");
+            }
         }
+
     }
 
     else if (rc.getHealth() < 10) { //low on health, need to run
