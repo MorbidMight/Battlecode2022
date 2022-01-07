@@ -30,7 +30,7 @@ public class ArchonAI {
 
         if(rc.getTeamLeadAmount(rc.getTeam()) >= 75)
         {
-            if (Math.random() > 0.8) {
+            if (Math.random() > 0.7) {
                 // Let's try to build a miner.
                 rc.setIndicatorString("Trying to build a miner");
                 if (rc.canBuildRobot(RobotType.MINER, dir)) {
