@@ -1,4 +1,4 @@
-package Testing;
+package BotV1_0_1;
 
 import battlecode.common.*;
 
