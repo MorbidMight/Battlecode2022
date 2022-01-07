@@ -174,7 +174,7 @@ public strictfp class RobotPlayer {
             }
         }
         Direction dir;
-        MapLocation[] k = rc.senseNearbyLocationsWithLead(10);
+        MapLocation[] k = rc.senseNearbyLocationsWithLead(rc.getType().visionRadiusSquared);
 
         // hi urav
         if(k.length == 0)
