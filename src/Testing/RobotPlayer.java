@@ -58,7 +58,8 @@ public strictfp class RobotPlayer {
         int numMiners = 0;
         boolean isScout = false;
         //figure out formula to taper off scout production
-        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5) {
+        double probScout = 0.2; //Probability out of 1 that a solider becomes a scout
+        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.1) {
             isScout = true;
         }
         // You can also use indicators to save debug notes in replays.
@@ -86,7 +87,10 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
+                        if(!isScout)
                         SoldierAI.runSoldier(rc);
+                        else
+                            ScoutAI.runScout(rc);
                         break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
                     case WATCHTOWER: // You might want to give them a try!
