@@ -34,7 +34,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
         }
     }
 
-    else if (rc.getHealth() < 10) { //low on health, need to run
+        if (rc.getHealth() < 10) { //low on health, need to run
         RobotInfo[] allies = rc.senseNearbyRobots(radius, ally);
         if (allies.length == 0)
             dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
@@ -54,12 +54,13 @@ static void runSoldier(RobotController rc) throws GameActionException {
         }
     }
 
-    else{
+    else if (enemies.length > 0)
+        dir = rc.getLocation().directionTo(enemies[a].location);
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
         }
-    }
+
 }
 }
 
