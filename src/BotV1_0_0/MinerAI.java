@@ -1,4 +1,4 @@
-package Testing;
+package BotV1_0_0;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -32,10 +32,16 @@ public class MinerAI {
         MapLocation[] k = rc.senseNearbyLocationsWithLead(rc.getType().visionRadiusSquared);
 
         // hi urav
+        int indexOfBestSquareInK = 0;
+        for(int i = 0; i<k.length;i++)
+        {
+            if(rc.senseLead(k[i])>rc.senseLead(k[indexOfBestSquareInK]))
+                indexOfBestSquareInK=i;
+        }
         if(k.length == 0)
             dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
         else
-            dir = rc.getLocation().directionTo(k[0]);
+            dir = rc.getLocation().directionTo(k[indexOfBestSquareInK]);
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
