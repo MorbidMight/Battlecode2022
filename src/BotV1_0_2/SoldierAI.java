@@ -1,4 +1,4 @@
-package BotV1_0_1;
+package BotV1_0_2;
 
 import battlecode.common.*;
 
@@ -15,6 +15,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
     Team opponent = rc.getTeam().opponent();
     RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
     Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+
     Team ally = rc.getTeam();
     if (enemies.length > 0){
         for (int i = 0; i < enemies.length; i++){
@@ -54,6 +55,10 @@ static void runSoldier(RobotController rc) throws GameActionException {
         }
     }
 
+        else if (rc.readSharedArray(10) != 0) {
+            MapLocation i = new MapLocation(rc.readSharedArray(10), rc.readSharedArray(11));
+            dir = rc.getLocation().directionTo(i);
+        }
     else if (enemies.length > 0)
         dir = rc.getLocation().directionTo(enemies[a].location);
         if (rc.canMove(dir)) {
