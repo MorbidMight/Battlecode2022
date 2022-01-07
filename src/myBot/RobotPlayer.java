@@ -59,12 +59,8 @@ public strictfp class RobotPlayer {
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
         System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
-        boolean isScout = false;
-        //figure out formula to taper off scout production
-        double probScout = 0; //Probability out of 1 that a solider becomes a scout
-        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() < probScout) {
-            isScout = true;
-        }
+
+        MapLocation locationBorn = rc.getLocation();
         // You can also use indicators to save debug notes in replays.
         rc.setIndicatorString("Hello world!");
 
@@ -90,10 +86,7 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                        if (!isScout)
                             SoldierAI.runSoldier(rc);
-                        else
-                            ScoutAI.runScout(rc);
                         break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
                     case WATCHTOWER: // You might want to give them a try!
