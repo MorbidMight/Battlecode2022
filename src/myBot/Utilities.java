@@ -1,4 +1,4 @@
-package BotV1_0_2;
+package myBot;
 import java.util.*;
 import battlecode.common.*;
 public class Utilities {
