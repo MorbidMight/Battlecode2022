@@ -201,7 +201,7 @@ public strictfp class RobotPlayer {
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
         Direction dir = directions[rng.nextInt(directions.length)];
             Team ally = rc.getTeam();
-        if (enemies.length > 1){
+        if (enemies.length > 0){
             for (int i = 0; i < enemies.length; i++){
                 if (enemies[i].getHealth() < k) {
                     a = i;
