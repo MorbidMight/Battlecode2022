@@ -1,4 +1,4 @@
-package Testing;
+package BotV1_0_1;
 
 import battlecode.common.*;
 import java.util.Random;
@@ -25,6 +25,8 @@ public strictfp class RobotPlayer {
      */
     static final Random rng = new Random(6147);
 
+    //array indexes
+    static final int NUM_LEAD = 0;
 
     /**
      * Array containing all the possible movement directions.
@@ -40,8 +42,7 @@ public strictfp class RobotPlayer {
             Direction.NORTHWEST,
     };
 // test
-    static RobotInfo[][] friendlys = new RobotInfo[2000][];
-    static RobotInfo[][] enemies = new RobotInfo[2000][];
+
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
      * It is like the main function for your robot. If this method returns, the robot dies!
@@ -55,12 +56,9 @@ public strictfp class RobotPlayer {
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
         System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
-
-        int numMiners = 0;
         boolean isScout = false;
         //figure out formula to taper off scout production
-        double probScout = 0.2; //Probability out of 1 that a solider becomes a scout
-        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.1) {
+        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5) {
             isScout = true;
         }
         // You can also use indicators to save debug notes in replays.
@@ -82,14 +80,14 @@ public strictfp class RobotPlayer {
                 // this into a different control structure!
                 switch (rc.getType()) {
                     case ARCHON:
-                        ArchonAI.runArchon(rc, numMiners);
+                        ArchonAI.runArchon(rc);
                         break;
                     case MINER:
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
                         if(!isScout)
-                        SoldierAI.runSoldier(rc);
+                            SoldierAI.runSoldier(rc);
                         else
                             ScoutAI.runScout(rc);
                         break;
