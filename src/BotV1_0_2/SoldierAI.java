@@ -51,15 +51,12 @@ static void runSoldier(RobotController rc) throws GameActionException {
     Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
 
     
-
-        MapLocation toAttack = calcprio(enemies).location; // find who to attack
+        if( enemies.length > 0)
+            MapLocation toAttack = calcprio(enemies).location; // find who to attack
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
-        if (rc.canMove(dir)) {
-            rc.move(dir);
-            System.out.println("I moved!");
-        }
+        
     }
 
         if (rc.getHealth() < 10) { //low on health, need to run
@@ -86,7 +83,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
             MapLocation i = new MapLocation(rc.readSharedArray(10), rc.readSharedArray(11));
             dir = rc.getLocation().directionTo(i);
         }
-    else if (enemies.length > 0)
+        else if (enemies.length > 0)
         dir = rc.getLocation().directionTo(enemies[a].location);
         if (rc.canMove(dir)) {
             rc.move(dir);
