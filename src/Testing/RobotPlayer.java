@@ -16,6 +16,10 @@ public strictfp class RobotPlayer {
      * these variables are static, in Battlecode they aren't actually shared between your robots.
      */
     static int turnCount = 0;
+    static int miners = 0;
+    static int builders = 0;
+    static int soldiers = 0;
+
 
     /**
      * A random number generator.
