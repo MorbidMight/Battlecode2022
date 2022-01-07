@@ -26,7 +26,9 @@ public strictfp class RobotPlayer {
     static final Random rng = new Random(6147);
 
 
-    /** Array containing all the possible movement directions. */
+    /**
+     * Array containing all the possible movement directions.
+     */
     static final Direction[] directions = {
             Direction.NORTH,
             Direction.NORTHEAST,
@@ -38,12 +40,13 @@ public strictfp class RobotPlayer {
             Direction.NORTHWEST,
     };
 // test
+
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
      * It is like the main function for your robot. If this method returns, the robot dies!
      *
-     * @param rc  The RobotController object. You use it to perform actions from this robot, and to get
-     *            information on its current status. Essentially your portal to interacting with the world.
+     * @param rc The RobotController object. You use it to perform actions from this robot, and to get
+     *           information on its current status. Essentially your portal to interacting with the world.
      **/
     @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
@@ -55,8 +58,7 @@ public strictfp class RobotPlayer {
         int numMiners = 0;
         boolean isScout = false;
         //figure out formula to taper off scout production
-        if(rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5)
-        {
+        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5) {
             isScout = true;
         }
         // You can also use indicators to save debug notes in replays.
@@ -67,7 +69,7 @@ public strictfp class RobotPlayer {
             // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
 
-            turnCount ++;  // We have now been alive for one more turn!
+            turnCount++;  // We have now been alive for one more turn!
             System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
@@ -77,13 +79,20 @@ public strictfp class RobotPlayer {
                 // use different strategies on different robots. If you wish, you are free to rewrite
                 // this into a different control structure!
                 switch (rc.getType()) {
-                    case ARCHON:     ArchonAI.runArchon(rc, numMiners);  break;
-                    case MINER:      MinerAI.runMiner(rc);   break;
-                    case SOLDIER:    runSoldier(rc); break;
+                    case ARCHON:
+                        ArchonAI.runArchon(rc, numMiners);
+                        break;
+                    case MINER:
+                        MinerAI.runMiner(rc);
+                        break;
+                    case SOLDIER:
+                        SoldierAI.runSoldier(rc);
+                        break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
                     case WATCHTOWER: // You might want to give them a try!
                     case BUILDER:
-                    case SAGE:       break;
+                    case SAGE:
+                        break;
                 }
             } catch (GameActionException e) {
                 // Oh no! It looks like we did something illegal in the Battlecode world. You should
@@ -108,68 +117,9 @@ public strictfp class RobotPlayer {
 
         // Your code should never reach here (unless it's intentional)! Self-destruction imminent...
     }
-
-
-
-
-
-    /**
-     * Run a single turn for a Soldier.
-     * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
-     */
-    static void runSoldier(RobotController rc) throws GameActionException {
-        int k = 0;
-        int a = 0;
-        // Try to attack someone
-        //add scout implementation
-        int radius = rc.getType().actionRadiusSquared;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        Direction dir = directions[rng.nextInt(directions.length)];
-            Team ally = rc.getTeam();
-        if (enemies.length > 0){
-            for (int i = 0; i < enemies.length; i++){
-                if (enemies[i].getHealth() < k) {
-                    a = i;
-                    k = enemies[i].getHealth();
-                }
-            }
-
-            MapLocation toAttack = enemies[a].location; // find who to attack
-            if (rc.canAttack(toAttack)) {
-                rc.attack(toAttack);
-            }
-            if (rc.canMove(dir)) {
-                rc.move(dir);
-                System.out.println("I moved!");
-            }
-        }
-        
-        else if (rc.getHealth() < 10) { //low on health, need to run
-            RobotInfo[] allies = rc.senseNearbyRobots(radius, ally);
-            if (allies.length == 0)
-                dir = directions[rng.nextInt(directions.length)];
-            else
-                dir = rc.getLocation().directionTo(allies[0].location);
-            for ( int i = 0; i < allies.length; i ++)
-            {
-                if(allies[i].getType() == RobotType.ARCHON) {
-                    dir = rc.getLocation().directionTo(allies[i].location);
-                    break;
-                }
-            }
-
-            if (rc.canMove(dir)) {
-                rc.move(dir);
-                System.out.println("I moved!");
-            }
-        }
-
-        else{ 
-            if (rc.canMove(dir)) {
-            rc.move(dir);
-            System.out.println("I moved!");
-        }
-        }
-    }
 }
+
+
+
+
+
