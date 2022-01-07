@@ -1,6 +1,7 @@
 package BotV1_0_1;
 
 import battlecode.common.*;
+
 import java.util.Random;
 
 /**
@@ -41,7 +42,9 @@ public strictfp class RobotPlayer {
             Direction.WEST,
             Direction.NORTHWEST,
     };
-// test
+    // test
+    static RobotInfo[][] friendlys = new RobotInfo[2000][];
+    static RobotInfo[][] enemies = new RobotInfo[2000][];
 
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
@@ -58,7 +61,8 @@ public strictfp class RobotPlayer {
         System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
         boolean isScout = false;
         //figure out formula to taper off scout production
-        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() > 0.5) {
+        double probScout = 0; //Probability out of 1 that a solider becomes a scout
+        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() < probScout) {
             isScout = true;
         }
         // You can also use indicators to save debug notes in replays.
@@ -86,7 +90,7 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                        if(!isScout)
+                        if (!isScout)
                             SoldierAI.runSoldier(rc);
                         else
                             ScoutAI.runScout(rc);

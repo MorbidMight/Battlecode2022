@@ -88,10 +88,7 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                        if(!isScout)
                         SoldierAI.runSoldier(rc);
-                        else
-                            ScoutAI.runScout(rc);
                         break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
                     case WATCHTOWER: // You might want to give them a try!
