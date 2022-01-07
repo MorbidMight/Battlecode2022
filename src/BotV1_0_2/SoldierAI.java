@@ -49,10 +49,10 @@ static void runSoldier(RobotController rc) throws GameActionException {
     Team opponent = rc.getTeam().opponent();
     RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
     Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-
-    
-        if( enemies.length > 0)
-            MapLocation toAttack = calcprio(enemies).location; // find who to attack
+    Team ally = rc.getTeam();
+        MapLocation toAttack;
+        if( enemies.length > 0) {
+            toAttack = calcprio(enemies).location; // find who to attack
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
@@ -84,7 +84,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
             dir = rc.getLocation().directionTo(i);
         }
         else if (enemies.length > 0)
-        dir = rc.getLocation().directionTo(enemies[a].location);
+        dir = rc.getLocation().directionTo(calcprio(enemies).location);
         if (rc.canMove(dir)) {
             rc.move(dir);
             System.out.println("I moved!");
