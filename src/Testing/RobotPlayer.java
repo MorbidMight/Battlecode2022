@@ -40,7 +40,8 @@ public strictfp class RobotPlayer {
             Direction.NORTHWEST,
     };
 // test
-
+    static RobotInfo[][] friendlys = new RobotInfo[2000][];
+    static RobotInfo[][] enemies = new RobotInfo[2000][];
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
      * It is like the main function for your robot. If this method returns, the robot dies!
