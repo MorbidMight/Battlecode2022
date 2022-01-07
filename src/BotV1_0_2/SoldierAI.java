@@ -6,9 +6,43 @@ public class SoldierAI {  /**
  * Run a single turn for a Soldier.
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
+static  public final double archpmod = 1;
+static public final double soldpmod = 0.6;
+static public final double minepmod = 0.3;
+static final double buildpmod = 0.4;
+static final double watchpmod = 0.5;
+static final double sagepmod = 0.7;
+static final double labpmod = 0.5;
+
+static RobotInfo calcprio (RobotInfo[] k) {
+    int j = 0; // index holder
+    double a = 0; // highest prio holder
+
+    for (int i = 0; i < k.length; i++) {
+        if(k[i].getType() == RobotType.ARCHON){
+            if(archpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
+                a = archpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+                j = i;
+            }
+        }
+        else if (k[i].getType() == RobotType.SOLDIER){
+            if(soldpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
+                a = soldpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+                j = i;
+            }
+        }
+        else if ((k[i].getType() == RobotType.MINER)){
+            if(minepmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
+                a = minepmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+                j = i;
+            }
+        }
+
+    }
+    return k[j];
+}
 static void runSoldier(RobotController rc) throws GameActionException {
-    int k = 0;
-    int a = 0;
+    
     // Try to attack someone
     //add scout implementation
     int radius = rc.getType().actionRadiusSquared;
@@ -16,16 +50,9 @@ static void runSoldier(RobotController rc) throws GameActionException {
     RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
     Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
 
-    Team ally = rc.getTeam();
-    if (enemies.length > 0){
-        for (int i = 0; i < enemies.length; i++){
-            if (enemies[i].getHealth() < k) {
-                a = i;
-                k = enemies[i].getHealth();
-            }
-        }
+    
 
-        MapLocation toAttack = enemies[a].location; // find who to attack
+        MapLocation toAttack = calcprio(enemies).location; // find who to attack
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
