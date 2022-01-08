@@ -72,6 +72,7 @@ public strictfp class RobotPlayer {
             turnCount++;  // We have now been alive for one more turn!
             System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
 
+
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
                 // The same run() function is called for every robot on your team, even if they are
@@ -89,8 +90,10 @@ public strictfp class RobotPlayer {
                             SoldierAI.runSoldier(rc);
                         break;
                     case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
-                    case WATCHTOWER: // You might want to give them a try!
+                    case WATCHTOWER:
+                        WatchtowerAI.runWatchtower(rc);
                     case BUILDER:
+                        BuilderAI.runBuilder(rc);
                     case SAGE:
                         break;
                 }
