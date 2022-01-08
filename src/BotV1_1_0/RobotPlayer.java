@@ -1,4 +1,4 @@
-package myBot;
+package BotV1_1_0;
 
 import battlecode.common.*;
 
@@ -58,15 +58,10 @@ public strictfp class RobotPlayer {
 
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
-        System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
-        boolean isScout = false;
-        //figure out formula to taper off scout production
-        double probScout = 0; //Probability out of 1 that a solider becomes a scout
-        if (rc.getType().equals(RobotType.SOLDIER) && Math.random() < probScout) {
-            isScout = true;
-        }
+        onStartup(rc);
+        MapLocation locationBorn = rc.getLocation();
         // You can also use indicators to save debug notes in replays.
-        rc.setIndicatorString("Hello world!");
+
 
         while (true) {
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite
@@ -74,7 +69,8 @@ public strictfp class RobotPlayer {
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
 
             turnCount++;  // We have now been alive for one more turn!
-            System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
+
+
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
             try {
@@ -90,14 +86,17 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                        if (!isScout)
-                            SoldierAI.runSoldier(rc);
-                        else
-                            ScoutAI.runScout(rc);
+                        SoldierAI.runSoldier(rc);
                         break;
-                    case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
-                    case WATCHTOWER: // You might want to give them a try!
+                    case LABORATORY:
+                        LabAI.runLab(rc);
+                        break;
+                    case WATCHTOWER:
+                        WatchtowerAI.runWatchtower(rc);
+                        break;
                     case BUILDER:
+                        BuilderAI.runBuilder(rc);
+                        break;
                     case SAGE:
                         break;
                 }
@@ -124,7 +123,14 @@ public strictfp class RobotPlayer {
 
         // Your code should never reach here (unless it's intentional)! Self-destruction imminent...
     }
+    static void onStartup(RobotController rc) throws GameActionException
+    {
+        if(rc.getType().equals(RobotType.ARCHON)) {
+            ArchonAI.writeCoordsToArray(rc);
+        }
+    }
 }
+
 
 
 
