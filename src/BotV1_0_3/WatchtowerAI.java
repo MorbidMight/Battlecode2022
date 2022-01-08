@@ -1,4 +1,4 @@
-package myBot;
+package BotV1_0_3;
 
 import battlecode.common.*;
 

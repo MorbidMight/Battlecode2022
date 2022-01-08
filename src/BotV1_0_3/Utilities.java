@@ -1,6 +1,4 @@
-package myBot;
-
-import java.util.*;
+package BotV1_0_3;
 
 import battlecode.common.*;
 
