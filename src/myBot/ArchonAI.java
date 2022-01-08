@@ -30,14 +30,14 @@ public class ArchonAI {
 
         if (rc.getTeamLeadAmount(rc.getTeam()) >= 180) {
             double randDouble = Math.random();
-            if (randDouble > 0.7) {
+            if (randDouble > 0.65) {
                 // Let's try to build a miner.
                 rc.setIndicatorString("Trying to build a miner");
                 if (rc.canBuildRobot(RobotType.MINER, dir)) {
                     rc.buildRobot(RobotType.MINER, dir);
 
                 }
-            } else if (randDouble > 0.1 && randDouble < 0.7) {
+            } else if (randDouble > 0.1 && randDouble < 0.65) {
                 // Let's try to build a soldier.
                 rc.setIndicatorString("Trying to build a soldier");
                 if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
@@ -45,7 +45,7 @@ public class ArchonAI {
 
                 }
             }
-            else if (randDouble < 0.1) {//ensure there aren't more than one builder per archon
+            else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon
                 rc.setIndicatorString("Trying to build a builder");
                 if (rc.canBuildRobot(RobotType.BUILDER, dir)) {
                     rc.buildRobot(RobotType.BUILDER, dir);
