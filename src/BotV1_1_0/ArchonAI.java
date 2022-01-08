@@ -3,6 +3,7 @@ package BotV1_1_0;
 import battlecode.common.*;
 
 public class ArchonAI {
+    static int labCount = 0;
     /**
      * Run a single turn for an Archon.
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
@@ -27,8 +28,16 @@ public class ArchonAI {
             if (q < 15 && rc.canRepair(k[w].getLocation()))
                 rc.repair(k[w].getLocation());
         }
-
-        if (rc.getTeamLeadAmount(rc.getTeam()) >= 180) {
+        if(RobotPlayer.turnCount > 500 && labCount == 0 && rc.getMapHeight() > 30 && rc.getMapWidth() > 30){
+            if(rc.getTeamLeadAmount(rc.getTeam()) >= 950){
+                if(rc.canBuildRobot(RobotType.BUILDER, rc.getLocation().directionTo(Utilities.findCenter(rc)).opposite())){
+                    rc.buildRobot(RobotType.BUILDER, rc.getLocation().directionTo(Utilities.findCenter(rc)).opposite());
+                    labCount++;
+                    rc.writeSharedArray(63, 1);
+                }
+            }
+        }
+        else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180 && (RobotPlayer.turnCount < 500 || rc.readSharedArray(63) == 2 || rc.getMapWidth() < 30 || rc.getMapHeight() < 30)) {
             double randDouble = Math.random();
             if (randDouble > 0.65) {
                 // Let's try to build a miner.

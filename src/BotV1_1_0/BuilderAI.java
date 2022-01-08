@@ -15,6 +15,24 @@ public class BuilderAI {
         RobotInfo[] allies = rc.senseNearbyRobots(20, ally);
 
         //repair
+        Direction ranDir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+        if(rc.readSharedArray(63) == 1) {
+            if (allies.length < 2) {
+                if (rc.canBuildRobot(RobotType.LABORATORY, ranDir)) {
+                    rc.buildRobot(RobotType.LABORATORY, ranDir);
+                    rc.writeSharedArray(63, 2);
+                    rc.writeSharedArray(61, rc.getLocation().add(ranDir).x);
+                    rc.writeSharedArray(62, rc.getLocation().add(ranDir).y);
+                }
+            }
+            else{
+                if(rc.canMove(ranDir)){
+                    rc.move(ranDir);
+                }
+            }
+
+        }
+
 
         int minerCount = 0;
         boolean alreadyWatchtower = false;
@@ -53,7 +71,7 @@ public class BuilderAI {
         RobotInfo lowestTower = null;
         for(int x = 0; x < allies.length; x++)
         {
-            if(allies[x].getType().equals(RobotType.WATCHTOWER))
+            if(allies[x].getType().equals(RobotType.WATCHTOWER) || allies[x].getType().equals((RobotType.LABORATORY)))
             {
                 lowestTower = allies[x];
             }

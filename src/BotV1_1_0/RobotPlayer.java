@@ -70,7 +70,7 @@ public strictfp class RobotPlayer {
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
 
             turnCount++;  // We have now been alive for one more turn!
-            System.out.println("Age: " + turnCount + "; Location: " + rc.getLocation());
+
 
 
             // Try/catch blocks stop unhandled exceptions, which cause your robot to explode.
@@ -89,7 +89,7 @@ public strictfp class RobotPlayer {
                     case SOLDIER:
                             SoldierAI.runSoldier(rc);
                         break;
-                    case LABORATORY: // Examplefuncsplayer doesn't use any of these robot types below.
+                    case LABORATORY: LabAI.runLab(rc);
                     case WATCHTOWER:
                         WatchtowerAI.runWatchtower(rc);
                     case BUILDER:

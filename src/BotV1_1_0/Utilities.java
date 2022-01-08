@@ -2,6 +2,7 @@ package BotV1_1_0;
 
 import battlecode.common.Direction;
 import battlecode.common.MapLocation;
+import battlecode.common.RobotController;
 
 public class Utilities {
 
@@ -16,7 +17,10 @@ public class Utilities {
         }
         return (new MapLocation(xPos, yPos));
     }
-
+    public static MapLocation findCenter (RobotController rc){
+        MapLocation k = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
+        return k;
+    }
     public static void main(String[] args) {
         System.out.println(pointOnCircle(6, 0, 0, 45));
     }

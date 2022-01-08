@@ -11,12 +11,21 @@ public class LabAI {
             lateGameBehavior(rc);
     }
 
-    static void regularBehavior(RobotController rc){
+    static void regularBehavior(RobotController rc) throws GameActionException {
+        if(rc.getTransmutationRate() < 8){
+            if(rc.canTransmute()){
+                rc.transmute();
+            }
 
+        }
     }
 
-    static void lateGameBehavior(RobotController rc){
-
+    static void lateGameBehavior(RobotController rc) throws GameActionException {
+        while(rc.getTransmutationRate() < 10) {
+            while(rc.canTransmute()){
+                rc.transmute();
+            }
+        }
     }
 
 
