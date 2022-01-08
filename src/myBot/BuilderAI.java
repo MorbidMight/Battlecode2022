@@ -43,6 +43,9 @@ public class BuilderAI {
                 dir = RobotPlayer.directions[x];
                 if (rc.canBuildRobot(RobotType.WATCHTOWER, dir)) {//look in all directions and see if you can build a watchtower
                     rc.buildRobot(RobotType.WATCHTOWER, dir);//build it
+                    if(rc.canRepair(rc.getLocation().add(dir))){
+                        rc.repair(rc.getLocation().add(dir));
+                    }
                     break;
                 }
             }

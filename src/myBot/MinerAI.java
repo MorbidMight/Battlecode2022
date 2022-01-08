@@ -6,6 +6,7 @@ import battlecode.common.*;
 public class MinerAI {
     static int turnssincemined = 0;
     static boolean isNearArchon = false;
+    static boolean isNotNextToArchon = true;
 
     /**
      * Run a single turn for a Miner.
@@ -34,6 +35,7 @@ public class MinerAI {
 
 
         //movement
+        Team ally = rc.getTeam();
         Direction dir;
         MapLocation[] k = rc.senseNearbyLocationsWithLead(rc.getType().visionRadiusSquared);
         int bestPossibleLead = 0;
@@ -49,9 +51,27 @@ public class MinerAI {
         }
         //Best possible lead is the amount of lead on the best square, 0 if no lead
         //IndexBest is the index of the best square in K, -1 if no potential lead
+        MapLocation t =  new MapLocation(0,0);
+        RobotInfo[] z = rc.senseNearbyRobots(1, ally);
+        for(int y = 0; y < z.length; y++) {
+            if (z[y].getType() == RobotType.ARCHON) {
+                t = z[y].getLocation();
+                isNotNextToArchon = false;
+                break;
+            }
+        }
 
         if (moveRandomly) {
+            if(!isNotNextToArchon){
+                dir = rc.getLocation().directionTo(t).opposite();
+                if(!rc.canMove(dir)){
+                    dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+
+                }
+            }
+
             dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+
             if (rc.canMove(dir)) {
                 rc.move(dir);
             }
@@ -63,17 +83,25 @@ public class MinerAI {
                 rc.move(dir);
             }
         }
-        Team ally = rc.getTeam();
-        RobotInfo[] p = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, ally);
 
+        RobotInfo[] p = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, ally);
+        RobotInfo[] z2 = rc.senseNearbyRobots(1, ally);
         for (int i = 0; i < p.length; i++) {
             if (p[i].getType() == RobotType.ARCHON) {
                 isNearArchon = true;
                 break;
             }
         }
-        if (isNearArchon && turnssincemined > 50)
+        for(int y = 0; y < z2.length; y++) {
+            if (z2[y].getType() == RobotType.ARCHON) {
+                isNotNextToArchon = false;
+                break;
+            }
+        }
+        if (isNearArchon && turnssincemined > 50 && isNotNextToArchon) {
             rc.disintegrate();
+        }
+
         isNearArchon = false;
 
     }
