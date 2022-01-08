@@ -16,25 +16,25 @@ static final double labpmod = 0.5;
 private static Direction dirOfAttack;
 
 static RobotInfo calcprio (RobotInfo[] k) {
-    int j = 0; // index holder
+    int j = 1; // index holder
     double a = 0; // highest prio holder
 
     for (int i = 0; i < k.length; i++) {
         if(k[i].getType() == RobotType.ARCHON){
-            if(archpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
-                a = archpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+            if(archpmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) + 1) > a) {
+                a = archpmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth())+1);
                 j = i;
             }
         }
         else if (k[i].getType() == RobotType.SOLDIER){
-            if(soldpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
-                a = soldpmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+            if(soldpmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth())+1) > a) {
+                a = soldpmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth())+1);
                 j = i;
             }
         }
         else if ((k[i].getType() == RobotType.MINER)){
-            if(minepmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth()) > a) {
-                a = minepmod * (k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth());
+            if(minepmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth())+1) > a) {
+                a = minepmod * ((k[i].getType().getMaxHealth(k[i].getLevel()) - k[i].getHealth())+1);
                 j = i;
             }
         }

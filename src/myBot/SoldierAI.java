@@ -7,6 +7,7 @@ public class SoldierAI {  /**
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
     private static Direction dirOfAttack;
+    private static boolean isSurrounded;
 static void runSoldier(RobotController rc) throws GameActionException {
     //find and go toward leader soldier
     Direction dir;
@@ -85,6 +86,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
             if (enemies[i].getHealth() < k) {
                 a = i;
                 k = enemies[i].getHealth();
+
             }
         }
 
@@ -92,10 +94,13 @@ static void runSoldier(RobotController rc) throws GameActionException {
         if (rc.canAttack(toAttack)) {
             rc.attack(toAttack);
         }
-        if (rc.canMove(dir)) {
-            rc.move(dir);
-            System.out.println("I moved!");
+        if(enemies[a].getType() != RobotType.ARCHON){
+            if (rc.canMove(dir)) {
+                rc.move(dir);
+
+            }
         }
+
     }
 
     else if (rc.getHealth() < 10) { //low on health, need to run
@@ -114,7 +119,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
 
         if (rc.canMove(dir)) {
             rc.move(dir);
-            System.out.println("I moved!");
+
         }
     }
 
@@ -124,9 +129,22 @@ static void runSoldier(RobotController rc) throws GameActionException {
         }
         if (rc.canMove(dir)) {
             rc.move(dir);
-            System.out.println("I moved!");
+
         }
     }
+    boolean adjMiner = false;
+    RobotInfo[] surr = rc.senseNearbyRobots(1, ally);
+    for(int i = 0; i < surr.length; i++)
+    {
+        if(surr[i].getType() == RobotType.MINER){
+            adjMiner = true;
+            break;
+        }
+
+    }
+
+    if(surr.length == 8 && adjMiner && rc.senseRubble(rc.getLocation()) < 30)
+        rc.disintegrate();
 }
 }
 
