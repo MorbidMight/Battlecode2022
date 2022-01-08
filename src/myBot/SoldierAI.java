@@ -7,6 +7,7 @@ public class SoldierAI {  /**
  * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
  */
     private static Direction dirOfAttack;
+    private static boolean isSurrounded;
 static void runSoldier(RobotController rc) throws GameActionException {
     //find and go toward leader soldier
     Direction dir;
@@ -96,7 +97,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
         if(enemies[a].getType() != RobotType.ARCHON){
             if (rc.canMove(dir)) {
                 rc.move(dir);
-                System.out.println("I moved!");
+
             }
         }
 
@@ -118,7 +119,7 @@ static void runSoldier(RobotController rc) throws GameActionException {
 
         if (rc.canMove(dir)) {
             rc.move(dir);
-            System.out.println("I moved!");
+
         }
     }
 
@@ -128,9 +129,12 @@ static void runSoldier(RobotController rc) throws GameActionException {
         }
         if (rc.canMove(dir)) {
             rc.move(dir);
-            System.out.println("I moved!");
+
         }
     }
+    RobotInfo[] surr = rc.senseNearbyRobots(1, ally);
+    if(surr.length == 8)
+        rc.disintegrate();
 }
 }
 
