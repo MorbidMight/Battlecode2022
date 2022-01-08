@@ -27,8 +27,11 @@ public class ArchonAI {
             if (q < 15 && rc.canRepair(k[w].getLocation()))
                 rc.repair(k[w].getLocation());
         }
-
+//        if (rc.canBuildRobot((RobotType.SAGE), dir)) {
+//            rc.buildRobot((RobotType.SAGE), dir);
+       // } else
         if (rc.getTeamLeadAmount(rc.getTeam()) >= 180) {
+
             double randDouble = Math.random();
             if (randDouble > 0.65) {
                 // Let's try to build a miner.
@@ -44,8 +47,7 @@ public class ArchonAI {
                     rc.buildRobot(RobotType.SOLDIER, dir);
 
                 }
-            }
-            else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon
+            } else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon
                 rc.setIndicatorString("Trying to build a builder");
                 if (rc.canBuildRobot(RobotType.BUILDER, dir)) {
                     rc.buildRobot(RobotType.BUILDER, dir);
