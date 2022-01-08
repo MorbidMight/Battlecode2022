@@ -1,6 +1,7 @@
 package BotV1_1_1;
 
 import battlecode.common.Direction;
+import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
@@ -84,5 +85,18 @@ public class Utilities {
         return enemyArchons;
     }
 
+    static void suicideBooth(RobotController rc) throws GameActionException {
+        boolean canMove = false;
+        for(int i = 0; i<8;i++){
+            if(!rc.isLocationOccupied(rc.getLocation().subtract(RobotPlayer.directions[i]))){
+            canMove = true;
+            break;
+            }
+
+
+        }
+        if(!canMove)
+            rc.disintegrate();
+    }
 }
 

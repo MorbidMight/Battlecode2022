@@ -12,7 +12,7 @@ public class LabAI {
     }
 
     static void regularBehavior(RobotController rc) throws GameActionException {
-        if(rc.getTransmutationRate() < 8){
+        if(rc.getTransmutationRate() < 8&&rc.getTeamLeadAmount(rc.getTeam())>1000){
             if(rc.canTransmute()){
                 rc.transmute();
             }

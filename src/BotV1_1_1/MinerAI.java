@@ -15,6 +15,7 @@ public class MinerAI {
     static void runMiner(RobotController rc) throws GameActionException {
         // Try to mine on squares around us.
         //Mining
+        Utilities.suicideBooth(rc);
         turnssincemined++;
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
