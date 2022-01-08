@@ -1,6 +1,7 @@
 package myBot;
 
 import battlecode.common.*;
+import battlecode.common.Clock;
 
 public class MinerAI {
 static int turnssincemined = 0;
@@ -40,26 +41,29 @@ static boolean isNearArchon = false;
         int bestPossibleLead = 0;
         int indexBest = -1;
         for (int i = 0; i < k.length; i++) {
-            if (rc.senseLead(k[i]) > bestPossibleLead && !rc.isLocationOccupied(k[i])) {
+            int effectiveLeadAtI = (int)(rc.senseLead(k[i])*(1+rc.senseRubble(k[i])/10.0));
+            if (effectiveLeadAtI > bestPossibleLead && !rc.isLocationOccupied(k[i])) {
                 indexBest = i;
-                bestPossibleLead = rc.senseLead(k[indexBest]);
+                bestPossibleLead = effectiveLeadAtI;
             }
         }
         //Best possible lead is the amount of lead on the best square, 0 if no lead
         //IndexBest is the index of the best square in K, -1 if no potential lead
+        boolean bestSpotIsCurrentSpot = k[indexBest].equals(rc.getLocation());
+        boolean bestSpotHasMoreLeadThanCurrentSpot = rc.senseLead(k[indexBest])>10+rc.senseLead(rc.getLocation());
+        boolean currentSpotHasNoLead = rc.senseLead(rc.getLocation())==0;
         if (indexBest == -1&&rc.senseLead(rc.getLocation())==0) {
             dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
             if (rc.canMove(dir)) {
                 rc.move(dir);
             }
-        } else if (!k[indexBest].equals(rc.getLocation())&&(rc.senseLead(k[indexBest])>rc.senseLead(rc.getLocation()))) {
+            //move only if true
+        } else if (!bestSpotIsCurrentSpot&&bestSpotHasMoreLeadThanCurrentSpot||currentSpotHasNoLead) {
             dir = rc.getLocation().directionTo(k[indexBest]);
             if (rc.canMove(dir)) {
                 rc.move(dir);
-                System.out.println("I moved!");
             }
         }
-
         Team ally = rc.getTeam();
         RobotInfo[] p = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, ally);
 
@@ -69,7 +73,7 @@ static boolean isNearArchon = false;
                 break;
             }
         }
-        if(isNearArchon && turnssincemined > 200)
+        if(isNearArchon && turnssincemined > 50)
             rc.disintegrate();
         isNearArchon = false;
 
