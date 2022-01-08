@@ -132,8 +132,18 @@ static void runSoldier(RobotController rc) throws GameActionException {
 
         }
     }
+    boolean adjMiner = false;
     RobotInfo[] surr = rc.senseNearbyRobots(1, ally);
-    if(surr.length == 8)
+    for(int i = 0; i < surr.length; i++)
+    {
+        if(surr[i].getType() == RobotType.MINER){
+            adjMiner = true;
+            break;
+        }
+
+    }
+
+    if(surr.length == 8 && adjMiner && rc.senseRubble(rc.getLocation()) < 30)
         rc.disintegrate();
 }
 }
