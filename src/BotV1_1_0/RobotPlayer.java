@@ -58,11 +58,10 @@ public strictfp class RobotPlayer {
 
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
-        System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
-
+        onStartup(rc);
         MapLocation locationBorn = rc.getLocation();
         // You can also use indicators to save debug notes in replays.
-        rc.setIndicatorString("Hello world!");
+
 
         while (true) {
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite
@@ -87,13 +86,17 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                            SoldierAI.runSoldier(rc);
+                        SoldierAI.runSoldier(rc);
                         break;
-                    case LABORATORY: LabAI.runLab(rc);
+                    case LABORATORY:
+                        LabAI.runLab(rc);
+                        break;
                     case WATCHTOWER:
                         WatchtowerAI.runWatchtower(rc);
+                        break;
                     case BUILDER:
                         BuilderAI.runBuilder(rc);
+                        break;
                     case SAGE:
                         break;
                 }
@@ -120,7 +123,14 @@ public strictfp class RobotPlayer {
 
         // Your code should never reach here (unless it's intentional)! Self-destruction imminent...
     }
+    static void onStartup(RobotController rc) throws GameActionException
+    {
+        if(rc.getType().equals(RobotType.ARCHON)) {
+            ArchonAI.writeCoordsToArray(rc);
+        }
+    }
 }
+
 
 
 

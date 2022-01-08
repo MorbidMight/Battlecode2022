@@ -51,7 +51,6 @@ public class BuilderAI {
             {
                 if (rc.canMove(rc.getLocation().directionTo(allies[x].getLocation()))){
                     rc.move(rc.getLocation().directionTo(allies[x].getLocation()));
-                    System.out.println("I moved!");
                 }
             }
         }

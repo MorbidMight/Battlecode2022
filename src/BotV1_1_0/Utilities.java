@@ -4,6 +4,8 @@ import battlecode.common.Direction;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
+import java.util.Map;
+
 public class Utilities {
 
     static final double PI = 3.141592653589;
@@ -22,7 +24,7 @@ public class Utilities {
         return k;
     }
     public static void main(String[] args) {
-        System.out.println(pointOnCircle(6, 0, 0, 45));
+        MapLocation[] test = {new MapLocation(2,22), new MapLocation(46,2)};
     }
 
 
@@ -56,6 +58,31 @@ public class Utilities {
         return RobotPlayer.directions[x+4%8];
     }
 
+    static MapLocation[] enemyArchonLocater(MapLocation[] ourArchons, RobotController rc)
+    {
+        MapLocation[] enemyArchons = new MapLocation[ourArchons.length];
+        boolean nonRotationalSymmetery = false;
+        for(int x = 0; x < ourArchons.length; x++)
+        {
+            MapLocation Rotation180 = new MapLocation(rc.getMapWidth() - ourArchons[x].x- 1, rc.getMapHeight() - ourArchons[x].y - 1);
+            for(int y = 0; y < ourArchons.length; y++)
+            {
+                if(Rotation180.equals(ourArchons[y]))
+                {
+                    nonRotationalSymmetery = true;
+                }
+            }
+            System.out.println(nonRotationalSymmetery);
+            if(nonRotationalSymmetery)
+            {
+                enemyArchons[x] = new MapLocation(ourArchons[x].x, rc.getMapHeight() - ourArchons[x].y - 1);
+            }else
+            {
+                enemyArchons[x] = Rotation180;
+            }
+        }
+        return enemyArchons;
+    }
 
 }
 
