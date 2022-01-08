@@ -34,12 +34,23 @@ public class Utilities {
         for (int i = 0; i < 8; i++) {
             if (d2.equals(RobotPlayer.directions[i]))
 
-            n2 = i;
+                n2 = i;
         }
-        int out = Math.abs(n1-n2);
-        if(out>4)
-            out = 8-out;
+        int out = Math.abs(n1 - n2);
+        if (out > 4)
+            out = 8 - out;
         return out;
+    }
+
+    static Direction oppositeDirection(Direction input) {
+        int x=0;
+        for (int i = 0; i < 8; i++) {
+            if (input.equals(RobotPlayer.directions[i])) {
+                x = i;
+                break;
+            }
+        }
+        return RobotPlayer.directions[x+4%8];
     }
 
 
