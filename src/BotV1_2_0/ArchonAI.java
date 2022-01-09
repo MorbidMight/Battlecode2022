@@ -153,4 +153,3 @@ public class ArchonAI {
         return locs;
     }
 }
-
