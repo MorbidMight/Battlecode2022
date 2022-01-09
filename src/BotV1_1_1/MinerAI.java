@@ -2,13 +2,11 @@ package BotV1_1_1;
 
 import battlecode.common.*;
 
-import java.util.Map;
+import java.util.Arrays;
 
 
 public class MinerAI {
     static int turnssincemined = 0;
-    static boolean isNearArchon = false;
-    static boolean isNotNextToArchon = true;
     static boolean farmer = false; //Once they get settle down they become a farmer and stop moving
 
     /**
@@ -19,8 +17,35 @@ public class MinerAI {
     static void runMiner(RobotController rc) throws GameActionException {
         // Try to mine on squares around us.
         //Mining
-        Utilities.suicideBooth(rc);
+        //Utilities.suicideBooth(rc);
         turnssincemined++;
+
+
+
+        //Determine if it should become a farmer, and if its too cloce to the arcon
+
+            //Find the Archon
+            MapLocation a;//location of archon
+            int distanceToArchon = Integer.MAX_VALUE;
+            Direction dir = Direction.SOUTH;
+            RobotInfo[] f = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, rc.getTeam());
+            for (RobotInfo i : f) {
+                if (i.type.equals(RobotType.ARCHON)) {
+                    a = i.getLocation();
+                    distanceToArchon = rc.getLocation().distanceSquaredTo(a);
+                    dir = rc.getLocation().directionTo(a).opposite();
+                }
+            }
+            //if too close to the archon move away
+            if (distanceToArchon < 2)
+                rc.move(randomRotate(dir));
+
+
+
+
+
+
+        //The actual mining gets done
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -37,39 +62,16 @@ public class MinerAI {
                 }
             }
         }
-        MapLocation a;//location of archon
-        int distanceToArchon = Integer.MAX_VALUE;
-        Direction dir = Direction.SOUTH;
-        RobotInfo[] f = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, rc.getTeam());
-        for (RobotInfo i : f) {
-            if (i.type.equals(RobotType.ARCHON)) {
-                a = i.getLocation();
-                distanceToArchon = rc.getLocation().distanceSquaredTo(a);
-                dir = rc.getLocation().directionTo(a).opposite();
-            }
-        }
-        if (distanceToArchon < 2)
-            rc.move(randomRotate(dir));
 
+        //If they still arent a farmer this will help them decide where to go
         if (!farmer) {
             //once theyre become a farmer they stop moving
-            int unoccupiedAdjacentSquaresWithLead = 0;
-            MapLocation[] adjacentSquaresWLead = rc.senseNearbyLocationsWithLead(2);
-            for (MapLocation i : adjacentSquaresWLead) {
-                if (!rc.isLocationOccupied(i)) {
-                    unoccupiedAdjacentSquaresWithLead++;
-                }
-            }
-
-            if (unoccupiedAdjacentSquaresWithLead > 1 && distanceToArchon < 2) {
-                farmer = true;
-                rc.move(Direction.SOUTH);
-            }
-            adjacentSquaresWLead = rc.senseNearbyLocationsWithLead(100);
+            //if thyre not a farmer they move to the best place
+            MapLocation[] SquaresWLead = rc.senseNearbyLocationsWithLead(100);
             MapLocation best = rc.getLocation();
             boolean knowsWhereToGo = false;
-            for (MapLocation i : adjacentSquaresWLead) {
-                if (rc.senseLead(i) > rc.senseLead(best) && !rc.isLocationOccupied(i)) {
+            for (MapLocation i : SquaresWLead) {
+                if (rc.senseLead(i) > rc.senseLead(best) && !rc.isLocationOccupied(i)&&rc.senseLead(i)>1) {
                     best = i;
                     knowsWhereToGo = true;
                 }
@@ -77,13 +79,16 @@ public class MinerAI {
             if (!knowsWhereToGo) {
                 best = rc.getLocation().subtract(RobotPlayer.DiagonalDirections[RobotPlayer.rng.nextInt(4)]);
             }
-            dir = rc.getLocation().directionTo(best);
+             dir = rc.getLocation().directionTo(best);
             dir = randomRotate(dir);
             rc.move(dir);
 
         }
+
     }
 
+    //This method takes in a direction, if that direction if diagonal it returns it,
+    // otherwise it randomly selectrs one of the adjacent directions and returns it
     static Direction randomRotate(Direction in) {
         int index = 0;
         for (int i = 0; i < 8; i++) {
