@@ -17,6 +17,7 @@ public strictfp class RobotPlayer {
      * these variables are static, in Battlecode they aren't actually shared between your robots.
      */
     static int turnCount = 0;
+    static int ArchonID = 0;
 
     /**
      * A random number generator.
@@ -71,6 +72,7 @@ public strictfp class RobotPlayer {
 
 
         while (true) {
+            ArchonID = rng.nextInt(4)+44;
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite
             // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
@@ -134,7 +136,9 @@ public strictfp class RobotPlayer {
     {
         if(rc.getType().equals(RobotType.ARCHON)) {
             ArchonAI.writeCoordsToArray(rc);
+            ArchonAI.writeIDToArray(rc);
         }
+
     }
 }
 
