@@ -1,9 +1,6 @@
 package BotV1_1_1;
 
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 import java.util.Map;
 
@@ -20,12 +17,14 @@ public class Utilities {
         }
         return (new MapLocation(xPos, yPos));
     }
-    public static MapLocation findCenter (RobotController rc){
-        MapLocation k = new MapLocation(rc.getMapWidth()/2, rc.getMapHeight()/2);
+
+    public static MapLocation findCenter(RobotController rc) {
+        MapLocation k = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
         return k;
     }
+
     public static void main(String[] args) {
-        MapLocation[] test = {new MapLocation(2,22), new MapLocation(46,2)};
+        MapLocation[] test = {new MapLocation(2, 22), new MapLocation(46, 2)};
     }
 
 
@@ -49,36 +48,30 @@ public class Utilities {
     }
 
     static Direction oppositeDirection(Direction input) {
-        int x=0;
+        int x = 0;
         for (int i = 0; i < 8; i++) {
             if (input.equals(RobotPlayer.directions[i])) {
                 x = i;
                 break;
             }
         }
-        return RobotPlayer.directions[x+4%8];
+        return RobotPlayer.directions[x + 4 % 8];
     }
 
-    static MapLocation[] enemyArchonLocater(MapLocation[] ourArchons, RobotController rc)
-    {
+    static MapLocation[] enemyArchonLocater(MapLocation[] ourArchons, RobotController rc) {
         MapLocation[] enemyArchons = new MapLocation[ourArchons.length];
         boolean nonRotationalSymmetery = false;
-        for(int x = 0; x < ourArchons.length; x++)
-        {
-            MapLocation Rotation180 = new MapLocation(rc.getMapWidth() - ourArchons[x].x- 1, rc.getMapHeight() - ourArchons[x].y - 1);
-            for(int y = 0; y < ourArchons.length; y++)
-            {
-                if(Rotation180.equals(ourArchons[y]))
-                {
+        for (int x = 0; x < ourArchons.length; x++) {
+            MapLocation Rotation180 = new MapLocation(rc.getMapWidth() - ourArchons[x].x - 1, rc.getMapHeight() - ourArchons[x].y - 1);
+            for (int y = 0; y < ourArchons.length; y++) {
+                if (Rotation180.equals(ourArchons[y])) {
                     nonRotationalSymmetery = true;
                 }
             }
             System.out.println(nonRotationalSymmetery);
-            if(nonRotationalSymmetery)
-            {
+            if (nonRotationalSymmetery) {
                 enemyArchons[x] = new MapLocation(ourArchons[x].x, rc.getMapHeight() - ourArchons[x].y - 1);
-            }else
-            {
+            } else {
                 enemyArchons[x] = Rotation180;
             }
         }
@@ -86,17 +79,35 @@ public class Utilities {
     }
 
     static void suicideBooth(RobotController rc) throws GameActionException {
-        boolean canMove = false;
-        for(int i = 0; i<8;i++){
-            if(!rc.isLocationOccupied(rc.getLocation().subtract(RobotPlayer.directions[i]))){
-            canMove = true;
-            break;
-            }
-
-
-        }
-        if(!canMove)
+        RobotInfo[] K = rc.senseNearbyRobots();
+        if (K.length >= 8)
             rc.disintegrate();
+    }
+
+    static MapLocation checkers(RobotController rc, MapLocation in) throws GameActionException {
+        if (in.x + in.y % 2 == 1) {
+            return in;
+        } else {
+            int j = 0;
+            MapLocation[] potential = new MapLocation[4];
+            potential[0] = new MapLocation(in.x + 1, in.y);
+            potential[1] = new MapLocation(in.x, in.y + 1);
+            potential[2] = new MapLocation(in.x - 1, in.y);
+            potential[3] = new MapLocation(in.x, in.y - 1);
+            for (int i = 0; i < 4; i++) {
+                if (!rc.isLocationOccupied(potential[i])) {
+                    j++;
+                }
+            }
+            int[] clean = new int[j];
+            j = 0;
+            for (int i = 0; i < 4; i++) {
+                if (!rc.isLocationOccupied(potential[i])) {
+                   clean[j]=i;
+                }
+            }
+            return potential[clean[RobotPlayer.rng.nextInt(clean.length)]];
+        }
     }
 }
 

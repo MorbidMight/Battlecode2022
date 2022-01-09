@@ -42,6 +42,13 @@ public strictfp class RobotPlayer {
             Direction.WEST,
             Direction.NORTHWEST,
     };
+
+    static final Direction[] DiagonalDirections = {
+            Direction.NORTHEAST,
+            Direction.SOUTHEAST,
+            Direction.SOUTHWEST,
+            Direction.NORTHWEST,
+    };
     // test
     static RobotInfo[][] friendlys = new RobotInfo[2000][];
     static RobotInfo[][] enemies = new RobotInfo[2000][];
