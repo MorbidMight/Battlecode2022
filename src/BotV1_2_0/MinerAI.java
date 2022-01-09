@@ -6,7 +6,7 @@ import battlecode.common.*;
 public class MinerAI {
     static int turnssincemined = 0;
     static boolean isNearArchon = false;
-    static boolean isNotNextToArchon = true;
+    static boolean isNextToArchon = false;
     static int whenLostGo = RobotPlayer.rng.nextInt(4);
     static int turnsSinceMoved = 0;
 
@@ -19,7 +19,9 @@ public class MinerAI {
         //Mining
         turnssincemined++;
         turnsSinceMoved++;
-
+        if (turnssincemined > 50 && turnsSinceMoved > 20 && isNextToArchon) {
+            rc.disintegrate();
+        }
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -40,7 +42,7 @@ public class MinerAI {
 
         RobotInfo[] AllFriendlyRobots = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, rc.getTeam());
         RobotInfo[] AllAdjacentRobots = rc.senseNearbyRobots(2, rc.getTeam());
-        MapLocation locationOfArchon = new MapLocation(0,0);
+        MapLocation locationOfArchon = new MapLocation(0, 0);
         for (RobotInfo info : AllFriendlyRobots) {
             if (info.getType().equals(RobotType.ARCHON)) {
                 isNearArchon = true;
@@ -50,13 +52,14 @@ public class MinerAI {
         }
         for (RobotInfo robotInfo : AllAdjacentRobots) {
             if (robotInfo.getType().equals(RobotType.ARCHON)) {
-                isNotNextToArchon = false;
+                isNextToArchon = true;
+                if (rc.canMove(robotInfo.getLocation().directionTo(rc.getLocation()))) {
+                    rc.move(Utilities.randomRotate(robotInfo.getLocation().directionTo(rc.getLocation())));
+                }
                 break;
             }
         }
-        if (isNearArchon && turnssincemined > 50 && turnsSinceMoved>20 && isNotNextToArchon) {
-            rc.disintegrate();
-        }
+
 
         //movement
         Direction dir;
@@ -78,30 +81,31 @@ public class MinerAI {
 
 
         if (moveRandomly) {
-            if (!isNotNextToArchon) {
-                dir = rc.getLocation().directionTo(locationOfArchon).opposite();
-                if (!rc.canMove(dir)) {
-                    dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+            for (int i = 0; i < 4; i++) {
+                if (rc.canMove(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4])) {
+                    rc.move(Utilities.randomRotate(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4]));
+                    turnsSinceMoved = 0;
+                    break;
+                    //move only if true
                 }
+            }
+
+        } else if (!k[indexBest].
+                equals(rc.getLocation()) && rc.senseLead(k[indexBest]) > 10 + rc.senseLead(rc.getLocation()) || rc.senseLead(rc.getLocation()) == 0) {
+            dir = rc.getLocation().directionTo(k[indexBest]);
+            if (rc.canMove(Utilities.randomRotate(dir))) {
+                rc.move(Utilities.randomRotate(dir));
             } else {
                 for (int i = 0; i < 4; i++) {
                     if (rc.canMove(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4])) {
                         rc.move(Utilities.randomRotate(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4]));
-                        turnsSinceMoved=0;
-                        break;
-                        //move only if true
+                        turnsSinceMoved = 0;
                     }
                 }
-            }
-        } else if (!k[indexBest].equals(rc.getLocation()) && rc.senseLead(k[indexBest]) > 10 + rc.senseLead(rc.getLocation()) || rc.senseLead(rc.getLocation()) == 0) {
-            dir = rc.getLocation().directionTo(k[indexBest]);
-            if (rc.canMove(Utilities.randomRotate(dir))) {
-                rc.move(Utilities.randomRotate(dir));
-                turnsSinceMoved=0;
-
             }
         }
     }
 }
+
 
 
