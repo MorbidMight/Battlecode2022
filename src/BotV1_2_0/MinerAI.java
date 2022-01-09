@@ -19,7 +19,7 @@ public class MinerAI {
         //Mining
         turnssincemined++;
         turnsSinceMoved++;
-        if (turnssincemined > 50 && turnsSinceMoved > 20 && isNextToArchon) {
+        if (turnssincemined > 50 && turnsSinceMoved > 20) {
             rc.disintegrate();
         }
         MapLocation me = rc.getLocation();
@@ -55,6 +55,7 @@ public class MinerAI {
                 isNextToArchon = true;
                 if (rc.canMove(robotInfo.getLocation().directionTo(rc.getLocation()))) {
                     rc.move(Utilities.randomRotate(robotInfo.getLocation().directionTo(rc.getLocation())));
+                    turnsSinceMoved = 0;
                 }
                 break;
             }
@@ -95,6 +96,7 @@ public class MinerAI {
             dir = rc.getLocation().directionTo(k[indexBest]);
             if (rc.canMove(Utilities.randomRotate(dir))) {
                 rc.move(Utilities.randomRotate(dir));
+                turnsSinceMoved = 0;
             } else {
                 for (int i = 0; i < 4; i++) {
                     if (rc.canMove(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4])) {
