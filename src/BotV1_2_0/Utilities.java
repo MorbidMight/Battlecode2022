@@ -81,6 +81,25 @@ public class Utilities {
         }
         return enemyArchons;
     }
+    static Direction randomRotate(Direction in) {
+        int index = 0;
+        for (int i = 0; i < 8; i++) {
+            if (in.equals(RobotPlayer.directions[i])) {
+                index = i;
+                break;
+            }
+        }
+        if (index % 2 == 1) {
+            return in;
+        } else {
+            index = index / 2;
+            if (RobotPlayer.rng.nextBoolean())
+                return RobotPlayer.DiagonalDirections[index];
+            else {
+                return RobotPlayer.DiagonalDirections[(index - 1) % 4];
+            }
+        }
+    }
 
 }
 
