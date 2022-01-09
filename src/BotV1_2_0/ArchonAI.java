@@ -42,6 +42,7 @@ public class ArchonAI {
             if (randDouble > 0.65) {
                 // Let's try to build a miner.
                 rc.setIndicatorString("Trying to build a miner");
+                dir = RobotPlayer.cardinalDirections[RobotPlayer.rng.nextInt(4)];
                 if (rc.canBuildRobot(RobotType.MINER, dir)) {
                     rc.buildRobot(RobotType.MINER, dir);
 
