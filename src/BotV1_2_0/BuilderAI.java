@@ -17,12 +17,12 @@ public class BuilderAI {
         //repair
         Direction ranDir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
         if(rc.readSharedArray(63) == 1) {
-            if (allies.length < 2) {
-                if (rc.canBuildRobot(RobotType.LABORATORY, ranDir)) {
-                    rc.buildRobot(RobotType.LABORATORY, ranDir);
-                    rc.writeSharedArray(63, 2);
-                    rc.writeSharedArray(61, rc.getLocation().add(ranDir).x);
-                    rc.writeSharedArray(62, rc.getLocation().add(ranDir).y);
+                        if (allies.length < 2) {
+                            if (rc.canBuildRobot(RobotType.LABORATORY, ranDir)) {
+                                rc.buildRobot(RobotType.LABORATORY, ranDir);
+                                rc.writeSharedArray(63, 2);
+                                rc.writeSharedArray(61, rc.getLocation().add(ranDir).x);
+                                rc.writeSharedArray(62, rc.getLocation().add(ranDir).y);
                 }
             }
             else{
@@ -55,7 +55,8 @@ public class BuilderAI {
             }
         }
         MapLocation q = new MapLocation(rc.readSharedArray(61), rc.readSharedArray(62));
-        if (minerCount >= 4 && !alreadyWatchtower && !rc.canSenseLocation(q)) {//if there are 4 miners in the area and there isn't already a watchtower
+
+        if (minerCount >= 4 && !alreadyWatchtower && !q.isWithinDistanceSquared(rc.getLocation(),RobotType.LABORATORY.visionRadiusSquared)) {//if there are 4 miners in the area and there isn't already a watchtower
             for (int x = 0; x < RobotPlayer.directions.length; x++) {
                 dir = RobotPlayer.directions[x];
                 if (rc.canBuildRobot(RobotType.WATCHTOWER, dir)) {//look in all directions and see if you can build a watchtower
