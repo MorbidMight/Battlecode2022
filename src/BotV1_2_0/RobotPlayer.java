@@ -18,6 +18,7 @@ public strictfp class RobotPlayer {
      */
     static int turnCount = 0;
     static int ArchonID = 0;
+    static boolean use1_2_0Soldiers = true;
 
 
     /**
@@ -108,7 +109,12 @@ public strictfp class RobotPlayer {
                         MinerAI.runMiner(rc);
                         break;
                     case SOLDIER:
-                        SoldierAI.runSoldier(rc);
+                        if(use1_2_0Soldiers) {
+                            SoldierAI.runSoldier(rc);
+                        }else
+                        {
+                            SoldierAI1_1_0.runSoldier(rc);
+                        }
                         break;
                     case LABORATORY:
                         LabAI.runLab(rc);
@@ -150,6 +156,10 @@ public strictfp class RobotPlayer {
         if(rc.getType().equals(RobotType.ARCHON)) {
             ArchonAI.writeCoordsToArray(rc);
             ArchonAI.writeIDToArray(rc);
+        }
+        if((rc.getMapHeight() + rc.getMapWidth()) < 90)
+        {
+            use1_2_0Soldiers = false;
         }
 
     }
