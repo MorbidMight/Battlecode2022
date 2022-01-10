@@ -10,10 +10,10 @@ public class LabAI {
         int goldDif = rc.getTeamGoldAmount(rc.getTeam().opponent()) - rc.getTeamGoldAmount(rc.getTeam());
         if (goldDif>-1)
             catchUp(rc);
-       // } else if (RobotPlayer.turnCount < 1800)
-         //   regularBehavior(rc);
-       // else
-       //     lateGameBehavior(rc);
+       /* } else if (RobotPlayer.turnCount < 1800)
+            regularBehavior(rc);
+        else
+           lateGameBehavior(rc); */
     }
 
     static void regularBehavior(RobotController rc) throws GameActionException {
