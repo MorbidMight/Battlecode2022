@@ -50,11 +50,11 @@ public class MinerAI {
                 break;
             }
         }
-        for (RobotInfo robotInfo : AllAdjacentRobots) {
-            if (robotInfo.getType().equals(RobotType.ARCHON)) {
+        for (RobotInfo      hh : AllAdjacentRobots) {
+            if (hh.getType().equals(RobotType.ARCHON)) {
                 isNextToArchon = true;
-                if (rc.canMove(robotInfo.getLocation().directionTo(rc.getLocation()))) {
-                    rc.move(Utilities.randomRotate(robotInfo.getLocation().directionTo(rc.getLocation())));
+                if (rc.canMove(hh.getLocation().directionTo(rc.getLocation()))) {
+                    rc.move(Utilities.randomRotate(hh.getLocation().directionTo(rc.getLocation())));
                     turnsSinceMoved = 0;
                 }
                 break;
