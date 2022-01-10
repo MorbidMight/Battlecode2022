@@ -13,7 +13,7 @@ public class ArchonAI {
         // Pick a direction to build in.
         //check for a possible repair
 
-        Direction dir;
+        Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
 
 
         if (RobotPlayer.turnCount < 500 && rc.readSharedArray(RobotPlayer.ArchonID) == rc.getID() || RobotPlayer.turnCount > 500) {
@@ -29,7 +29,7 @@ public class ArchonAI {
                 double randDouble = Math.random();
                 if (randDouble > 0.65) {
                     // Let's try to build a miner.
-                    dir = RobotPlayer.CardinalDirections[RobotPlayer.rng.nextInt(RobotPlayer.CardinalDirections.length)];
+                    dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(4) * 2];
                     rc.setIndicatorString("Trying to build a miner");
                     if (rc.canBuildRobot(RobotType.MINER, dir)) {
                         rc.buildRobot(RobotType.MINER, dir);
@@ -38,13 +38,13 @@ public class ArchonAI {
                 } else if (randDouble > 0.1 && randDouble < 0.65) {
                     // Let's try to build a soldier.
                     rc.setIndicatorString("Trying to build a soldier");
-                    dir = RobotPlayer.DiagonalDirections[RobotPlayer.rng.nextInt(RobotPlayer.DiagonalDirections.length)];
                     if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
                         rc.buildRobot(RobotType.SOLDIER, dir);
+                        rc.writeSharedArray(3, rc.readSharedArray(3) + 1);
+
                     }
                 } else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon
                     rc.setIndicatorString("Trying to build a builder");
-                    dir = RobotPlayer.DiagonalDirections[RobotPlayer.rng.nextInt(RobotPlayer.DiagonalDirections.length)];
                     if (rc.canBuildRobot(RobotType.BUILDER, dir)) {
                         rc.buildRobot(RobotType.BUILDER, dir);
                     }
