@@ -6,7 +6,9 @@ import battlecode.common.*;
 public class MinerAI {
     static int turnssincemined = 0;
     static boolean isNearArchon = false;
-    static boolean isNotNextToArchon = true;
+    static boolean isNextToArchon = false;
+    static int whenLostGo = RobotPlayer.rng.nextInt(4);
+    static int turnsSinceMoved = 0;
 
     /**
      * Run a single turn for a Miner.
@@ -16,6 +18,10 @@ public class MinerAI {
         // Try to mine on squares around us.
         //Mining
         turnssincemined++;
+        turnsSinceMoved++;
+        if (turnssincemined > 50 && turnsSinceMoved > 20) {
+            rc.disintegrate();
+        }
         MapLocation me = rc.getLocation();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -34,77 +40,74 @@ public class MinerAI {
         }
 
 
+        RobotInfo[] AllFriendlyRobots = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, rc.getTeam());
+        RobotInfo[] AllAdjacentRobots = rc.senseNearbyRobots(2, rc.getTeam());
+        MapLocation locationOfArchon = new MapLocation(0, 0);
+        for (RobotInfo info : AllFriendlyRobots) {
+            if (info.getType().equals(RobotType.ARCHON)) {
+                isNearArchon = true;
+                locationOfArchon = info.getLocation();
+                break;
+            }
+        }
+        for (RobotInfo      hh : AllAdjacentRobots) {
+            if (hh.getType().equals(RobotType.ARCHON)) {
+                isNextToArchon = true;
+                if (rc.canMove(hh.getLocation().directionTo(rc.getLocation()))) {
+                    rc.move(Utilities.randomRotate(hh.getLocation().directionTo(rc.getLocation())));
+                    turnsSinceMoved = 0;
+                }
+                break;
+            }
+        }
+
+
         //movement
-        Team ally = rc.getTeam();
         Direction dir;
         MapLocation[] k = rc.senseNearbyLocationsWithLead(rc.getType().visionRadiusSquared);
         int bestPossibleLead = 0;
         int indexBest = -1;
         boolean moveRandomly = true;
         for (int i = 0; i < k.length; i++) {
-            int effectiveLeadAtI = (int)Math.round((rc.senseLead(k[i]) * (1 + rc.senseRubble(k[i]) / 10.0)));
+            int effectiveLeadAtI = (int) Math.round((rc.senseLead(k[i]) * (1 + rc.senseRubble(k[i]) / 10.0)));
             if (effectiveLeadAtI > bestPossibleLead && !rc.isLocationOccupied(k[i])) {
                 indexBest = i;
                 bestPossibleLead = (int) (rc.senseLead(k[indexBest]) * (1 + rc.senseRubble(k[indexBest]) / 10.0));
                 moveRandomly = false;
             }
         }
+
         //Best possible lead is the amount of lead on the best square, 0 if no lead
         //IndexBest is the index of the best square in K, -1 if no potential lead
-        MapLocation t =  new MapLocation(0,0);
-        RobotInfo[] z = rc.senseNearbyRobots(1, ally);
-        for(int y = 0; y < z.length; y++) {
-            if (z[y].getType() == RobotType.ARCHON) {
-                t = z[y].getLocation();
-                isNotNextToArchon = false;
-                break;
-            }
-        }
+
 
         if (moveRandomly) {
-            if(!isNotNextToArchon){
-                dir = rc.getLocation().directionTo(t).opposite();
-                if(!rc.canMove(dir)){
-                    dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-
+            for (int i = 0; i < 4; i++) {
+                if (rc.canMove(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4])) {
+                    rc.move(Utilities.randomRotate(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4]));
+                    turnsSinceMoved = 0;
+                    break;
+                    //move only if true
                 }
             }
 
-            dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-
-            if (rc.canMove(dir)) {
-                rc.move(dir);
-            }
-            //move only if true
-
-        } else if (!k[indexBest].equals(rc.getLocation())&&  rc.senseLead(k[indexBest]) > 10 + rc.senseLead(rc.getLocation()) || rc.senseLead(rc.getLocation()) == 0) {
+        } else if (!k[indexBest].
+                equals(rc.getLocation()) && rc.senseLead(k[indexBest]) > 10 + rc.senseLead(rc.getLocation()) || rc.senseLead(rc.getLocation()) == 0) {
             dir = rc.getLocation().directionTo(k[indexBest]);
-            if (rc.canMove(dir)) {
-                rc.move(dir);
+            if (rc.canMove(Utilities.randomRotate(dir))) {
+                rc.move(Utilities.randomRotate(dir));
+                turnsSinceMoved = 0;
+            } else {
+                for (int i = 0; i < 4; i++) {
+                    if (rc.canMove(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4])) {
+                        rc.move(Utilities.randomRotate(RobotPlayer.DiagonalDirections[(whenLostGo + 1) % 4]));
+                        turnsSinceMoved = 0;
+                    }
+                }
             }
         }
-
-        RobotInfo[] p = rc.senseNearbyRobots(rc.getType().visionRadiusSquared, ally);
-        RobotInfo[] z2 = rc.senseNearbyRobots(1, ally);
-        for (int i = 0; i < p.length; i++) {
-            if (p[i].getType() == RobotType.ARCHON) {
-                isNearArchon = true;
-                break;
-            }
-        }
-        for(int y = 0; y < z2.length; y++) {
-            if (z2[y].getType() == RobotType.ARCHON) {
-                isNotNextToArchon = false;
-                break;
-            }
-        }
-        if (isNearArchon && turnssincemined > 50 && isNotNextToArchon) {
-            rc.disintegrate();
-        }
-
-        isNearArchon = false;
-
     }
 }
+
 
 

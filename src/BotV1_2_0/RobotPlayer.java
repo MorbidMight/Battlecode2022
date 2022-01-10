@@ -43,6 +43,12 @@ public strictfp class RobotPlayer {
             Direction.WEST,
             Direction.NORTHWEST,
     };
+    static final Direction[] cardinalDirections = {
+            Direction.NORTH,
+            Direction.EAST,
+            Direction.SOUTH,
+            Direction.WEST,
+    };
 
     static final Direction[] DiagonalDirections = {
             Direction.NORTHEAST,
@@ -78,7 +84,7 @@ public strictfp class RobotPlayer {
 
 
         while (true) {
-            ArchonID = rng.nextInt(ArchonAI.readArchonCoords(rc).length)+44;
+            ArchonID = rng.nextInt(rc.getArchonCount())+44;
             // This code runs during the entire lifespan of the robot, which is why it is in an infinite
             // loop. If we ever leave this loop and return from run(), the robot dies! At the end of the
             // loop, we call Clock.yield(), signifying that we've done everything we want to do.
