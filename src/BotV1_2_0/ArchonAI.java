@@ -40,6 +40,7 @@ public class ArchonAI {
                     rc.setIndicatorString("Trying to build a soldier");
                     if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
                         rc.buildRobot(RobotType.SOLDIER, dir);
+                        rc.writeSharedArray(3, rc.readSharedArray(3) + 1);
 
                     }
                 } else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon

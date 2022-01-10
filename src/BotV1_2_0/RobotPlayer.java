@@ -19,6 +19,7 @@ public strictfp class RobotPlayer {
     static int turnCount = 0;
     static int ArchonID = 0;
 
+
     /**
      * A random number generator.
      * We will use this RNG to make some random moves. The Random class is provided by the java.util.Random

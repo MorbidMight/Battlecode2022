@@ -26,11 +26,12 @@ public class LabAI {
     }
 
     static void catchUp(RobotController rc) throws GameActionException {
-        if (rc.getTransmutationRate() < 15) {
+
+
             if (rc.canTransmute()) {
                 rc.transmute();
             }
-        }
+
     }
 
     static void lateGameBehavior(RobotController rc) throws GameActionException {
