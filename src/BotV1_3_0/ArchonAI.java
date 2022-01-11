@@ -14,10 +14,11 @@ public class ArchonAI {
         //check for a possible repair
 
         Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+        double randDouble = Math.random();
 
 
-        if (RobotPlayer.turnCount < 500 && rc.readSharedArray(RobotPlayer.ArchonID) == rc.getID() || RobotPlayer.turnCount > 500) {
-            if (RobotPlayer.turnCount > 500 && labCount == 0 && rc.getMapHeight() > 30 && rc.getMapWidth() > 30) {
+        if (rc.getRoundNum()< 500 && rc.readSharedArray(RobotPlayer.ArchonID) == rc.getID() || rc.getRoundNum()> 500) {
+            if (rc.getRoundNum()> 500 && labCount == 0 && rc.getMapHeight() > 30 && rc.getMapWidth() > 30) {
                 if (rc.getTeamLeadAmount(rc.getTeam()) >= 950) {
                     if (rc.canBuildRobot(RobotType.BUILDER, rc.getLocation().directionTo(Utilities.findCenter(rc)).opposite())) {
                         rc.buildRobot(RobotType.BUILDER, rc.getLocation().directionTo(Utilities.findCenter(rc)).opposite());
@@ -25,8 +26,7 @@ public class ArchonAI {
                         rc.writeSharedArray(63, 1);
                     }
                 }
-            } else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180 && (RobotPlayer.turnCount < 500 || rc.readSharedArray(63) == 2 || rc.getMapWidth() < 30 || rc.getMapHeight() < 30)) {
-                double randDouble = Math.random();
+            } else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180 && (rc.getRoundNum()< 500 || rc.readSharedArray(63) == 2 || rc.getMapWidth() < 30 || rc.getMapHeight() < 30)) {
                 if (randDouble > 0.65) {
                     // Let's try to build a miner.
                     dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(4) * 2];
