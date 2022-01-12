@@ -1,6 +1,7 @@
 package BotV1_2_0;
 
 import battlecode.common.Direction;
+import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
@@ -99,6 +100,17 @@ public class Utilities {
                 return RobotPlayer.DiagonalDirections[(index - 1) % 4];
             }
         }
+    }
+
+    static void writeLocationToArray(int x, int y, int index,RobotController rc) throws GameActionException {
+        rc.writeSharedArray(index, (x*100+y));
+    }
+
+    static MapLocation getLocationFromArray(int index, RobotController rc)throws GameActionException{
+        int in = rc.readSharedArray(index);
+        int x = in/100;
+        int y = in%100;
+        return new MapLocation(x,y);
     }
 
 }
