@@ -27,21 +27,21 @@ public class ArchonAI {
                         rc.writeSharedArray(63, 1);
                     }
                 }
-            } else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180 && (RobotPlayer.turnCount < 500 || rc.readSharedArray(63) == 2 || rc.getMapWidth() < 30 || rc.getMapHeight() < 30)) {
-                if (randDouble > 0.65) {
+            } else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180) {
+                if (randDouble > 0.8||rc.getRoundNum()<=100) {
                     int move = RobotPlayer.rng.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (rc.canBuildRobot(RobotType.MINER, RobotPlayer.DiagonalDirections[move + i])) {
                             rc.buildRobot(RobotType.MINER, RobotPlayer.DiagonalDirections[move + i]);
                             break;
                         }
-                    }
-                } else if (randDouble > 0.1 && randDouble < 0.65) {
+                    }                                                                           //will be uncommented when died soldiers deincriment
+                } else if ((randDouble > 0.1 && randDouble < 0.8)||rc.readSharedArray(3)<15/*&&!(rc.readSharedArray(4)>100)*/) {
                     int move = RobotPlayer.rng.nextInt(4);
                     for (int i = 0; i < 4; i++) {
                         if (rc.canBuildRobot(RobotType.SOLDIER, RobotPlayer.CardinalDirections[move + i])) {
                             rc.buildRobot(RobotType.SOLDIER, RobotPlayer.CardinalDirections[move + i]);
-                            rc.writeSharedArray(4,rc.readSharedArray(4)+1);
+                            rc.writeSharedArray(3,rc.readSharedArray(3)+1);
                             break;
                         }
                     }

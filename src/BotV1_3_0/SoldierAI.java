@@ -10,14 +10,16 @@ private static Direction dirOfAttack;
     private static boolean isSurrounded;
     static void runSoldier(RobotController rc) throws GameActionException {
         //find and go toward leader soldier
-
+        if(rc.getHealth()<=5){
+            rc.writeSharedArray(3,rc.readSharedArray(3)+1);
+        }
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
 
         boolean canSenseArchon = false;
 
 
-        if (rc.getRoundNum() < 1500) {
+        if (rc.readSharedArray(3)<150&rc.getRoundNum() < 1500) {
             RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
             Direction dir;
             boolean isLeader;

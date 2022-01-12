@@ -57,7 +57,7 @@ public class BuilderAI {
         Direction labDir = RobotPlayer.directions[0];
         for(int x = 0; x < RobotPlayer.directions.length; x++)
         {
-            if(rc.canBuildRobot(RobotType.LABORATORY, RobotPlayer.directions[x]));
+            if(rc.canBuildRobot(RobotType.LABORATORY, RobotPlayer.directions[x]))
             {
                 labDir = RobotPlayer.directions[x];
             }
@@ -74,7 +74,7 @@ public class BuilderAI {
         }
         for(int x = 0; x < RobotPlayer.directions.length; x++)
         {
-            if(rc.canBuildRobot(RobotType.WATCHTOWER, RobotPlayer.directions[x]));
+            if(rc.canBuildRobot(RobotType.WATCHTOWER, RobotPlayer.directions[x]))
             {
                 dir = RobotPlayer.directions[x];
             }
