@@ -4,6 +4,7 @@ import battlecode.common.*;
 
 public class ArchonAI {
     static int labCount = 0;
+
     /**
      * Run a single turn for an Archon.
      * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
@@ -26,32 +27,36 @@ public class ArchonAI {
                     }
                 }
             } else if (rc.getTeamLeadAmount(rc.getTeam()) >= 180 && (RobotPlayer.turnCount < 500 || rc.readSharedArray(63) == 2 || rc.getMapWidth() < 30 || rc.getMapHeight() < 30)) {
-                double randDouble = Math.random();
+                double randDouble = RobotPlayer.rng.nextDouble();
                 if (randDouble > 0.65) {
-                    // Let's try to build a miner.
-                    dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(4) * 2];
-                    rc.setIndicatorString("Trying to build a miner");
-                    if (rc.canBuildRobot(RobotType.MINER, dir)) {
-                        rc.buildRobot(RobotType.MINER, dir);
-
+                    int move = RobotPlayer.rng.nextInt(4);
+                    for (int i = 0; i < 4; i++) {
+                        if (rc.canBuildRobot(RobotType.MINER, RobotPlayer.DiagonalDirections[move+i])) {
+                            rc.buildRobot(RobotType.MINER, RobotPlayer.DiagonalDirections[move+i]);
+                            break;
+                        }
                     }
                 } else if (randDouble > 0.1 && randDouble < 0.65) {
-                    // Let's try to build a soldier.
-                    rc.setIndicatorString("Trying to build a soldier");
-                    if (rc.canBuildRobot(RobotType.SOLDIER, dir)) {
-                        rc.buildRobot(RobotType.SOLDIER, dir);
-                        rc.writeSharedArray(3, rc.readSharedArray(3) + 1);
-
+                    int move = RobotPlayer.rng.nextInt(4);
+                    for (int i = 0; i < 4; i++) {
+                        if (rc.canBuildRobot(RobotType.SOLDIER, RobotPlayer.CardinalDirections[move+i])) {
+                            rc.buildRobot(RobotType.SOLDIER, RobotPlayer.CardinalDirections[move+i]);
+                            break;
+                        }
                     }
                 } else if (randDouble < 0.05) {//ensure there aren't more than one builder per archon
-                    rc.setIndicatorString("Trying to build a builder");
-                    if (rc.canBuildRobot(RobotType.BUILDER, dir)) {
-                        rc.buildRobot(RobotType.BUILDER, dir);
+                    int move = RobotPlayer.rng.nextInt(4);
+                    for (int i = 0; i < 4; i++) {
+                        if (rc.canBuildRobot(RobotType.BUILDER, RobotPlayer.CardinalDirections[move+i])) {
+                            rc.buildRobot(RobotType.BUILDER, RobotPlayer.CardinalDirections[move+i]);
+                            break;
+                        }
                     }
                 }
             }
         }
     }
+
     public static void writeCoordsToArray(RobotController rc) throws GameActionException {   //This code doesn't work if an archon is at 0,0
         int AX1 = rc.readSharedArray(51);
         int AY1 = rc.readSharedArray(52);
@@ -87,7 +92,8 @@ public class ArchonAI {
             }
         }
     }
-    public static void writeIDToArray (RobotController rc) throws GameActionException {
+
+    public static void writeIDToArray(RobotController rc) throws GameActionException {
         int ID1 = rc.readSharedArray(44);
         if (ID1 == 0) {
             rc.writeSharedArray(44, rc.getID());
@@ -114,35 +120,32 @@ public class ArchonAI {
             }
         }
     }
-    static MapLocation[] readArchonCoords(RobotController rc) throws GameActionException
-    {
+
+    static MapLocation[] readArchonCoords(RobotController rc) throws GameActionException {
         MapLocation[] locs;
         int AX1 = rc.readSharedArray(51);
         int AY1 = rc.readSharedArray(52);
         int AX2 = rc.readSharedArray(53);
         int AY2 = rc.readSharedArray(54);
-        if(AX2 == 0 && AY2 == 0) {
+        if (AX2 == 0 && AY2 == 0) {
             locs = new MapLocation[1];
-            locs[0] = new MapLocation(AX1,AY1);
-        }else
-        {
+            locs[0] = new MapLocation(AX1, AY1);
+        } else {
             int AX3 = rc.readSharedArray(55);
             int AY3 = rc.readSharedArray(56);
-            if(AX3 == 0 && AY3 == 0) {
+            if (AX3 == 0 && AY3 == 0) {
                 locs = new MapLocation[2];
-                locs[0] = new MapLocation(AX1,AY1);
+                locs[0] = new MapLocation(AX1, AY1);
                 locs[1] = new MapLocation(AX2, AY2);
-            }else
-            {
+            } else {
                 int AX4 = rc.readSharedArray(57);
                 int AY4 = rc.readSharedArray(58);
-                if(AX4 == 0 && AY4 == 0) {
+                if (AX4 == 0 && AY4 == 0) {
                     locs = new MapLocation[3];
                     locs[0] = new MapLocation(AX1, AY1);
                     locs[1] = new MapLocation(AX2, AY2);
                     locs[2] = new MapLocation(AX3, AY3);
-                }else
-                {
+                } else {
                     locs = new MapLocation[4];
                     locs[0] = new MapLocation(AX1, AY1);
                     locs[1] = new MapLocation(AX2, AY2);
