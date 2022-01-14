@@ -15,13 +15,10 @@ private static Direction dirOfAttack;
         }
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
-
         boolean canSenseArchon = false;
-
-
-        if (rc.readSharedArray(3)<150&rc.getRoundNum() < 1500) {
+        Direction dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+        if (rc.readSharedArray(3)<150 && rc.getRoundNum() < 1500) {
             RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-            Direction dir;
             boolean isLeader;
             //make a leader if there is no leader
             MapLocation myLoc = rc.getLocation();
@@ -74,13 +71,6 @@ private static Direction dirOfAttack;
                     }
                 }
             }
-            while(!rc.canMove(dir)){
-                dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
-            }
-            if(rc.canMove(dir))
-                rc.move(dir);
-
-
             int k = 0;
             int a = 0;
             // Try to attack someone
@@ -98,12 +88,26 @@ private static Direction dirOfAttack;
 
                     }
                 }
+                if(!rc.canAttack(enemies[a].getLocation())){
+                    dir = rc.getLocation().directionTo(enemies[a].getLocation());
+                }
+                else if(rc.getLocation().distanceSquaredTo(enemies[a].getLocation()) > 9){
+                    dir = rc.getLocation().directionTo(enemies[a].getLocation()).opposite();
+                }
 
                 MapLocation toAttack = enemies[a].location; // find who to attack
                 if (rc.canAttack(toAttack)) {
                     rc.attack(toAttack);
                 }
             }
+
+            while(!rc.canMove(dir)){
+                dir = RobotPlayer.directions[RobotPlayer.rng.nextInt(RobotPlayer.directions.length)];
+            }
+            if(rc.canMove(dir))
+                rc.move(dir);
+
+
 
             boolean adjMiner = false;
             RobotInfo[] surr = rc.senseNearbyRobots(1, ally);
@@ -187,6 +191,15 @@ private static Direction dirOfAttack;
                         k = enemies[i].getHealth();
 
                     }
+                }
+                if(!rc.canAttack(enemies[a].getLocation())){
+                    dir = rc.getLocation().directionTo(enemies[a].getLocation());
+                }
+                else if(rc.getLocation().distanceSquaredTo(enemies[a].getLocation()) > 9){
+                    dir = rc.getLocation().directionTo(enemies[a].getLocation()).opposite();
+                }
+                if(rc.canMove(dir)){
+                    rc.move(dir);
                 }
 
                 MapLocation toAttack = enemies[a].location; // find who to attack
