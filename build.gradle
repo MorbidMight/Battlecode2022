@@ -129,7 +129,7 @@ static String getVersionFromWeb() {
     }
 
     if (version == null) {
-        throw new Exception("Couldn't find new version number. Connect to the internet or update your scaffold")
+                throw new Exception("Couldn't find new version number. Connect to the internet or update your scaffold")
     }
 
     return version
